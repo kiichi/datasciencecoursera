@@ -1,0 +1,169 @@
+library("swirl")
+swirl()
+c(44,NA,5,NA)
+x <- c(44,NA,5,NA)
+x * 3
+y <- rnorm(1000)
+z <- rep(NA,1000)
+myData <- sample(c(y,z),100)
+myNA <- is.na(myData)
+myNA
+myData == NA
+sum(myNA)
+myData
+0/0
+Inf-Inf
+x
+x[1:10]
+x[is.na(x)]
+x[!is.na(x)]
+y <- x[!is.na(x)]
+y
+y[y>0]
+x[x>0]
+x[!is.na(x) & x > 0]
+x[c(3,5,7)]
+x[0]
+x[3000]
+x[c(-2,-10)]
+x[-c(2,10)]
+vect <- c(foo=11,bar=2,norf=NA)
+vect
+names(vect)
+vect2 <- c(11,2,NA)
+names(vect2) <- c("foo","bar","norf")
+identical(vect,vect2)
+vect["bar"]
+vect[c("foo","bar")]
+myVector = 1:20
+myVector = [1:20]
+myVector <- 1:20
+myVector
+dim(myVector)
+length(myVector)
+dim(myVector) <- c(4,5)
+dim(myVector)
+attributes(myVector)
+myVector
+class(myVector)
+myMatrix <- myVector
+?matrix()
+?matrix
+myMatrix2 <- matrix(1:20,nrow=4,ncol=5)
+identical(myMatrix,myMatrix2)
+patients <- c("Bill","Gina","Kelly","Sean")
+cbind(patients,myMatrix)
+myData <- data.frame(patients,myMatrix)
+myData
+class(myData)
+cnames<-c("patient","age","weight","bp","rating","test")
+colnames(myData)<-cnames
+myData
+if (T){}
+}
+if (T){}
+if (T){ print(1)}
+if (T){ print(1)}else{print(2)}
+if (F){ print(1)}else{print(2)}
+#####################################
+print("Simple Conditions ------------")#
+y<-1#
+x<-5#
+if(x>4){#
+  y<-10#
+}#
+print(x)#
+print(y)#
+#
+#####################################
+print("Conditional Assignments - like ternary operator  --------")#
+y<- if (x > 3){#
+  200#
+} else { #Ughhhh you gotta put the curly brace and else statement at the same line in R#
+  99#
+}#
+print(x)#
+print(y)#
+#
+#####################################
+print("for-loop -----------------")#
+for (i in 1:10){#
+  print(i)#
+}#
+print("----------")#
+chars <- c("A","B","C")#
+for(i in 1:3){#
+  print(chars[i])#
+}#
+print("----------")#
+for (i in seq_along(chars)){#
+  print(chars[i])#
+}#
+print("----------")#
+for (i in 1:length(chars)){#
+  print(chars[i])#
+}#
+#
+#NOTE: You can not use seq_len for chars!#
+#for (i in seq_len(chars)){#
+#
+print("----------")#
+#for-each #
+for (c in chars){#
+  print(c)#
+}#
+#nested#
+m<-matrix(1:6,2,3)#
+print(m)#
+#
+for (i in 1:nrow(m)){#
+  for(j in 1:ncol(m)){#
+    print(m[i,j])#
+  }#
+}#
+print("---------")#
+for (i in seq_len(nrow(m))){#
+  for(j in seq_len(ncol(m))){#
+    print(m[i,j])#
+  }#
+}
+?rbinom
+#########################################
+# Function is "First Class Objects" - just like other objects#
+print("funtion example ----------------")#
+fn <- function(arg){#
+  print(arg)#
+}#
+#
+fn("hello")#
+#
+#########################################
+print("default argument ----------------")#
+fn <- function(arg="Default Hello"){#
+  print(arg)#
+}#
+#no argument supplied#
+fn()#
+#
+#########################################
+# example of default values#
+print("default argument 2 ----------------")#
+mydata <- rnorm(10)#
+#below all same effects by supplying default argument values#
+print(mydata)#
+print(sd(mydata))#
+print(sd(x=mydata))#
+print(sd(x=mydata, na.rm=FALSE))#
+print(sd(na.rm=FALSE,x=mydata))
+!plot
+?plot
+myplot<-function(data,...){#
+  plot(data,type="o",...) # pass the rest of function as overwritten arguments#
+}#
+mydata <- rnorm(10)#
+myplot(mydata, col="blue") #see plot tab
+install
+install.packages("ggplot2")
+install.packages("KernSmooth")
+install.packages("KernSmooth")
+library("KernSmooth")

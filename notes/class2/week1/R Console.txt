@@ -1,0 +1,1195 @@
+
+R version 3.0.3 (2014-03-06) -- "Warm Puppy"
+Copyright (C) 2014 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[R.app GUI 1.63 (6660) x86_64-apple-darwin10.8.0]
+
+> getwd
+function () 
+.Internal(getwd())
+<bytecode: 0x10227fae0>
+<environment: namespace:base>
+> getwd()
+[1] "/Users/kiichi"
+> getwd()
+[1] "/Users/kiichi/work/r"
+> dir()
+[1] "prj"  "test"
+> getwd()
+[1] "/Users/kiichi/work/r/class"
+> dir()
+character(0)
+> cd
+Error: object 'cd' not found
+> myfunction <- function(x){
++ 	y <- rnorm(100)
++ 	mean(y)
++ }
+> ls()
+[1] "myfunction"
+> myfunction(100)
+[1] 0.09907926
+> myfunction(100)
+[1] 0.1401402
+> myfunction(100)
+[1] -0.006623611
+> myfunction(100)
+[1] -0.02870747
+> dir()
+[1] "myfunction.R"
+> source("myfunction.R")
+> myfunction()
+[1] 0.03340083
+> source("myfunction.R")
+> ls()
+[1] "myfunction" "second"    
+> second(1000)
+[1] 1000.909
+> second(1000)
+[1] 999.0027
+> second(1000)
+[1] 998.7311
+> second(1000)
+[1] 1000.974
+> second(1000)
+[1] 1000.134
+> second(1000)
+[1] 1001.176
+> second(1000)
+[1] 998.5188
+> second(1000)
+[1] 999.5175
+> second(1000)
+[1] 1000.248
+> second(1000)
+[1] 1000.359
+> second(1000)
+[1] 1000.034
+> second(1000)
+[1] 999.0011
+> second(1000)
+[1] 1001.892
+> second(1000)
+[1] 999.478
+> second(1000)
+[1] 1000.394
+> second(1000)
+[1] 998.9048
+> second(1000)
+[1] 999.6841
+> second(1000)
+[1] 1000.546
+> second(1000)
+[1] 1000.508
+> second(1000)
+[1] 998.9601
+> second(4:10)
+[1] 4.434820 5.581912 5.704768 7.379326 7.865200 9.456462 8.977614
+> x <- 1
+> 1.length
+Error: unexpected symbol in "1.length"
+> x.length
+Error: object 'x.length' not found
+> print(x)
+[1] 1
+> msg <- "message"
+> y <- 1L
+> print(y)
+[1] 1
+> x
+[1] 1
+> y
+[1] 1
+> msg
+[1] "message"
+> x <- #@##
++ 
++ dsa"
++ ""
+Error: unexpected string constant in:
+"dsa"
+""
+> #hgjgj
+> x <- 1:20
+> x
+ [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+> x <- 1:100
+> x
+  [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25
+ [26]  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48  49  50
+ [51]  51  52  53  54  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75
+ [76]  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99 100
+> x
+  [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+ [16]  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30
+ [31]  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45
+ [46]  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60
+ [61]  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75
+ [76]  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90
+ [91]  91  92  93  94  95  96  97  98  99 100
+> x
+  [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21  22  23  24
+ [25]  25  26  27  28  29  30  31  32  33  34  35  36  37  38  39  40  41  42  43  44  45  46  47  48
+ [49]  49  50  51  52  53  54  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72
+ [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96
+ [97]  97  98  99 100
+> x <- c(0.5,0.6)
+> x
+[1] 0.5 0.6
+> x <- c(TRUE,FALSE)
+> x
+[1]  TRUE FALSE
+> x <- c(T,F)
+> x
+[1]  TRUE FALSE
+> x <- c("A","B","C")
+> x
+[1] "A" "B" "C"
+> x <- 100:200
+> x
+  [1] 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123
+ [25] 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147
+ [49] 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171
+ [73] 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195
+ [97] 196 197 198 199 200
+> x <- c(1+0i, 2+4i)
+> x
+[1] 1+0i 2+4i
+> x <- c(1.7,"a")
+> x
+[1] "1.7" "a"  
+> x <- c(1.7,"a","b")
+> x
+[1] "1.7" "a"   "b"  
+> x <- c(1.7,"a","b",2,3,4)
+> x
+[1] "1.7" "a"   "b"   "2"   "3"   "4"  
+> x <- c(T,2)
+> x
+[1] 1 2
+> x <- c(T,2,4,45,6,)
+Error in c(T, 2, 4, 45, 6, ) : argument 6 is empty
+> x <- c(T,2,4,45,6,2)
+> x
+[1]  1  2  4 45  6  2
+> x <- c("a",2,3,"b")
+> x
+[1] "a" "2" "3" "b"
+> class(x)
+[1] "character"
+> as.numeric(x)
+[1] NA  2  3 NA
+Warning message:
+NAs introduced by coercion 
+> as.numeric(x)
+[1] NA  2  3 NA
+Warning message:
+NAs introduced by coercion 
+> x
+[1] "a" "2" "3" "b"
+> y <- as.numeric(x)
+Warning message:
+NAs introduced by coercion 
+> y
+[1] NA  2  3 NA
+> y<- as.character(x)
+> y
+[1] "a" "2" "3" "b"
+> y<- as.numeric(x)
+Warning message:
+NAs introduced by coercion 
+> y
+[1] NA  2  3 NA
+> as.logical(x)
+[1] NA NA NA NA
+> as.logical(y)
+[1]   NA TRUE TRUE   NA
+> as.complex(x)
+[1]   NA 2+0i 3+0i   NA
+Warning message:
+NAs introduced by coercion 
+> x
+[1] "a" "2" "3" "b"
+> m <- matrix(nrow=2,ncol=3)
+> m
+     [,1] [,2] [,3]
+[1,]   NA   NA   NA
+[2,]   NA   NA   NA
+> dim(m)
+[1] 2 3
+> attributes(m)
+$dim
+[1] 2 3
+
+> a <- attributes(m)
+> class(a)
+[1] "list"
+> $dim
+Error: unexpected '$' in "$"
+> dim
+function (x)  .Primitive("dim")
+> m <- matrix(1:6, nrow=2,ncol=3)
+> m
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> m <- matrix(2:6, nrow=2,ncol=3)
+Warning message:
+In matrix(2:6, nrow = 2, ncol = 3) :
+  data length [5] is not a sub-multiple or multiple of the number of rows [2]
+> m
+     [,1] [,2] [,3]
+[1,]    2    4    6
+[2,]    3    5    2
+> m <- matrix(2:100, nrow=2,ncol=3)
+Warning message:
+In matrix(2:100, nrow = 2, ncol = 3) :
+  data length [99] is not a sub-multiple or multiple of the number of rows [2]
+> m
+     [,1] [,2] [,3]
+[1,]    2    4    6
+[2,]    3    5    7
+> m <- matrix(2:8, nrow=2,ncol=3)
+Warning message:
+In matrix(2:8, nrow = 2, ncol = 3) :
+  data length [7] is not a sub-multiple or multiple of the number of rows [2]
+> m <- matrix(2:7, nrow=2,ncol=3)
+> m
+     [,1] [,2] [,3]
+[1,]    2    4    6
+[2,]    3    5    7
+> m <- 1:10
+> dim(m)
+NULL
+> dim(m) <- c(2,5)
+> m
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    1    3    5    7    9
+[2,]    2    4    6    8   10
+> x <- 1:3
+> x
+[1] 1 2 3
+> y <- 10:12
+> y
+[1] 10 11 12
+> cbind(x,y)
+     x  y
+[1,] 1 10
+[2,] 2 11
+[3,] 3 12
+> z <- cbind(x,y)
+> z
+     x  y
+[1,] 1 10
+[2,] 2 11
+[3,] 3 12
+> rbind(x,y)
+  [,1] [,2] [,3]
+x    1    2    3
+y   10   11   12
+> x <- list(1,"a",TRUE,1+4i)
+> x
+[[1]]
+[1] 1
+
+[[2]]
+[1] "a"
+
+[[3]]
+[1] TRUE
+
+[[4]]
+[1] 1+4i
+
+> x <- factor(c("yes","yes","no","yes","no"))
+> x
+[1] yes yes no  yes no 
+Levels: no yes
+> table(x)
+x
+ no yes 
+  2   3 
+> survey <- c("yes","yes","no","yes","no")
+> table(survey)
+survey
+ no yes 
+  2   3 
+> unclass(survey)
+[1] "yes" "yes" "no"  "yes" "no" 
+> unclass(x)
+[1] 2 2 1 2 1
+attr(,"levels")
+[1] "no"  "yes"
+> sf <- factor(survey)
+> table(sf)
+sf
+ no yes 
+  2   3 
+> unclass(sf)
+[1] 2 2 1 2 1
+attr(,"levels")
+[1] "no"  "yes"
+> lvl = c("yes","no")
+> sf <- factor(survey, levels=lvl)
+> sf
+[1] yes yes no  yes no 
+Levels: yes no
+> table(sf)
+sf
+yes  no 
+  3   2 
+> is.na(NA)
+[1] TRUE
+> is.na("A")
+[1] FALSE
+> is.nan(NaN)
+[1] TRUE
+> is.nan(a)
+Error in is.nan(a) : default method not implemented for type 'list'
+> is.nan()
+Error in is.nan() : 0 arguments passed to 'is.nan' which requires 1
+> is.nan(x)
+[1] FALSE FALSE FALSE FALSE FALSE
+> is.na(x)
+[1] FALSE FALSE FALSE FALSE FALSE
+> z <- c(1,2,NA,10,3)
+> z
+[1]  1  2 NA 10  3
+> is.na(z)
+[1] FALSE FALSE  TRUE FALSE FALSE
+> is.nan(z)
+[1] FALSE FALSE FALSE FALSE FALSE
+> z <- c(1,2,NA,NA,NaN,10,3)
+> is.nan(z)
+[1] FALSE FALSE FALSE FALSE  TRUE FALSE FALSE
+> is.na(z)
+[1] FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE
+> class(c)
+[1] "function"
+> dir(c)
+Error in dir(c) : invalid 'path' argument
+> c
+function (..., recursive = FALSE)  .Primitive("c")
+> x <- data.frame(foo = 1:4, bar = c(T,T,F,F))
+> x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+> x <- data.frame(foo = 1:4, bar = c(T,T,F,F,T))
+Error in data.frame(foo = 1:4, bar = c(T, T, F, F, T)) : 
+  arguments imply differing number of rows: 4, 5
+> x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+> x <- data.frame(foo = 1:5, bar = c(T,T,F,F,T))
+> x
+  foo   bar
+1   1  TRUE
+2   2  TRUE
+3   3 FALSE
+4   4 FALSE
+5   5  TRUE
+> nrow(x)
+[1] 5
+> nrow(y)
+NULL
+> nrow(x)
+[1] 5
+> ncol(x)
+[1] 2
+> x <-1:3
+> names(x)
+NULL
+> names(x) <- c("foo","bar","norf")
+> x
+ foo  bar norf 
+   1    2    3 
+> names(x)
+[1] "foo"  "bar"  "norf"
+> x <- list(a=1,b=2,c=3)
+> 
+> x
+$a
+[1] 1
+
+$b
+[1] 2
+
+$c
+[1] 3
+
+> m<-matrix(1:4,nrow=2,ncol=2)
+> m
+     [,1] [,2]
+[1,]    1    3
+[2,]    2    4
+> dimnames(m) <- list(c("a","b",c("c","d"))
++ a
+Error: unexpected symbol in:
+"dimnames(m) <- list(c("a","b",c("c","d"))
+a"
+> dimnames(m) <- list(c("a","b"),c("c","d"))
+> m
+  c d
+a 1 3
+b 2 4
+> m[[1]]
+[1] 1
+> m[[2]]
+[1] 2
+> m[[4]]
+[1] 4
+> m[[5]]
+Error in m[[5]] : subscript out of bounds
+> x <- c("a","b","c","d")
+> x[1]
+[1] "a"
+> x[3]
+[1] "c"
+> x[1:2]
+[1] "a" "b"
+> x[x>"a"]
+[1] "b" "c" "d"
+> x[x>"b"]
+[1] "c" "d"
+> u <- x > "a"
+> u
+[1] FALSE  TRUE  TRUE  TRUE
+> u <- x > "b"
+> u
+[1] FALSE FALSE  TRUE  TRUE
+> x[u]
+[1] "c" "d"
+> x <- matrix(1:6,2,3)
+> x
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> x[2,3]
+[1] 6
+> x[2,2]
+[1] 4
+> x[2]
+[1] 2
+> x[2,-1]
+[1] 4 6
+> x[2,]
+[1] 2 4 6
+> x[1,]
+[1] 1 3 5
+> x[,2]
+[1] 3 4
+> x <- matrix(1:6,2,3)
+> x
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> x[1,2]
+[1] 3
+> x[1,2, drop=FALSE]
+     [,1]
+[1,]    3
+> x[1,, drop=FALSE]
+     [,1] [,2] [,3]
+[1,]    1    3    5
+> x[2,, drop=FALSE]
+     [,1] [,2] [,3]
+[1,]    2    4    6
+> x <- matrix(1:6,2,3)
+> x[1,]
+[1] 1 3 5
+> x[1,,drop=FALSE]
+     [,1] [,2] [,3]
+[1,]    1    3    5
+> x
+     [,1] [,2] [,3]
+[1,]    1    3    5
+[2,]    2    4    6
+> x <- list(foo=1:4,bar=0.6)
+> x
+$foo
+[1] 1 2 3 4
+
+$bar
+[1] 0.6
+
+> x[[1]]
+[1] 1 2 3 4
+> x[[2]]
+[1] 0.6
+> x$bar
+[1] 0.6
+> x$foo
+[1] 1 2 3 4
+> x[["bar"]]
+[1] 0.6
+> x[["foo"]]
+[1] 1 2 3 4
+> x["foo"]
+$foo
+[1] 1 2 3 4
+
+> x["bar"]
+$bar
+[1] 0.6
+
+> x <- list(foo=1:4,bar=0.5,baz="hello")
+> x
+$foo
+[1] 1 2 3 4
+
+$bar
+[1] 0.5
+
+$baz
+[1] "hello"
+
+> x[c(1,3)]
+$foo
+[1] 1 2 3 4
+
+$baz
+[1] "hello"
+
+> x[c(1:3)]
+$foo
+[1] 1 2 3 4
+
+$bar
+[1] 0.5
+
+$baz
+[1] "hello"
+
+> name<-"foo"
+> x[[name]]
+[1] 1 2 3 4
+> x
+$foo
+[1] 1 2 3 4
+
+$bar
+[1] 0.5
+
+$baz
+[1] "hello"
+
+> x$name
+NULL
+> x$foo
+[1] 1 2 3 4
+> x<-list(a=list(10,20,20),b=c(22,11,2.3))
+> x
+$a
+$a[[1]]
+[1] 10
+
+$a[[2]]
+[1] 20
+
+$a[[3]]
+[1] 20
+
+
+$b
+[1] 22.0 11.0  2.3
+
+> x[[c(1,3)]]
+[1] 20
+> x
+$a
+$a[[1]]
+[1] 10
+
+$a[[2]]
+[1] 20
+
+$a[[3]]
+[1] 20
+
+
+$b
+[1] 22.0 11.0  2.3
+
+> x<-list(a=list(10,20,20),b=c(22,11,2.3))
+> x[[c(1,3)]]
+[1] 20
+> x[[c(1,2)]]
+[1] 20
+> x[[c(1,1)]]
+[1] 10
+> x[[[1]][[3]]]
+Error: unexpected '[' in "x[[["
+> x[[1]][[3]]
+[1] 20
+> x[[[2]][[3]]]
+Error: unexpected '[' in "x[[["
+> x[[2]][[3]]
+[1] 2.3
+> x <- list(aardvark=1:5)
+> x
+$aardvark
+[1] 1 2 3 4 5
+
+> x[["a"]]
+NULL
+> x[["a",exact=FALSE]]
+[1] 1 2 3 4 5
+> x[["x",exact=FALSE]]
+NULL
+> x[["v",exact=FALSE]]
+NULL
+> x[["aa",exact=FALSE]]
+[1] 1 2 3 4 5
+> x[["aar",exact=FALSE]]
+[1] 1 2 3 4 5
+> x[["aar",exact=T]]
+NULL
+> x[["aar",exact=F]]
+[1] 1 2 3 4 5
+> class(x)
+[1] "list"
+> x <- c(1,2,NA,4,NA,5)
+> x
+[1]  1  2 NA  4 NA  5
+> bad <- is.na(x)
+> bad
+[1] FALSE FALSE  TRUE FALSE  TRUE FALSE
+> x[bad]
+[1] NA NA
+> x[!bad]
+[1] 1 2 4 5
+> df = data.frame(one=list("c","b","d",NA,"x"),two=list(1,2,NA,NA,NA,200))
+> df
+  one..c. one..b. one..d. one.NA one..x. two.1 two.2 two.NA two.NA.1 two.NA.2
+1       c       b       d     NA       x     1     2     NA       NA       NA
+  two.200
+1     200
+> df = data.frame(one=list("c","b","d",NA,"x"),two=list(1,2,NA,NA,NA,200))
+> df
+  one..c. one..b. one..d. one.NA one..x. two.1 two.2 two.NA two.NA.1 two.NA.2 two.200
+1       c       b       d     NA       x     1     2     NA       NA       NA     200
+> df = data.frame(one=c("c","b","d",NA,"x"),two=c(1,2,NA,NA,NA,200))
+Error in data.frame(one = c("c", "b", "d", NA, "x"), two = c(1, 2, NA,  : 
+  arguments imply differing number of rows: 5, 6
+> df = data.frame(one=c("c","b","d",NA,"x"),two=c(1,2,NA,NA,200))
+> df
+   one two
+1    c   1
+2    b   2
+3    d  NA
+4 <NA>  NA
+5    x 200
+> df = data.frame(one=list("c","b","d",NA,"x"),two=list(1,2,NA,NA,200))
+> df
+  one..c. one..b. one..d. one.NA one..x. two.1 two.2 two.NA two.NA.1 two.200
+1       c       b       d     NA       x     1     2     NA       NA     200
+> df = data.frame(one=c("c","b","d",NA,"x"),two=c(1,2,NA,NA,200))
+> df
+   one two
+1    c   1
+2    b   2
+3    d  NA
+4 <NA>  NA
+5    x 200
+> df
+   one two
+1    c   1
+2    b   2
+3    d  NA
+4 <NA>  NA
+5    x 200
+> df = data.frame(one=c("c","b","d","e","x"),two=c(1,2,NA,NA,200))
+> df
+  one two
+1   c   1
+2   b   2
+3   d  NA
+4   e  NA
+5   x 200
+> df[1]
+  one
+1   c
+2   b
+3   d
+4   e
+5   x
+> df[2]
+  two
+1   1
+2   2
+3  NA
+4  NA
+5 200
+> bad <- is.na(df[2])
+> bad
+       two
+[1,] FALSE
+[2,] FALSE
+[3,]  TRUE
+[4,]  TRUE
+[5,] FALSE
+> df[bad]
+[1] "d" "e" NA  NA 
+> df[2,3]
+NULL
+> df[2,2]
+[1] 2
+> df[2,bad]
+Error in `[.data.frame`(df, 2, bad) : undefined columns selected
+> bad
+       two
+[1,] FALSE
+[2,] FALSE
+[3,]  TRUE
+[4,]  TRUE
+[5,] FALSE
+> bad <- is.na(df[[2]])
+> bad
+[1] FALSE FALSE  TRUE  TRUE FALSE
+> df[2,bad]
+Error in `[.data.frame`(df, 2, bad) : undefined columns selected
+> df[1,bad]
+Error in `[.data.frame`(df, 1, bad) : undefined columns selected
+> df[bad]
+Error in `[.data.frame`(df, bad) : undefined columns selected
+> df[[1,2]]
+[1] 1
+> df[[1,bad]]
+Error in .subset2(x, ..2, exact = exact) : 
+  attempt to select less than one element
+> df[[,bad]]
+Error in .subset2(x, ..2, exact = exact) : 
+  attempt to select less than one element
+> df[[bad,]]
+Error in `[[.data.frame`(df, bad, ) : 
+  argument "..2" is missing, with no default
+> df[bad,]
+  one two
+3   d  NA
+4   e  NA
+>  df = data.frame(one=c("c","b","d","e","x"),two=c(1,2,NA,NA,200))
+> df
+  one two
+1   c   1
+2   b   2
+3   d  NA
+4   e  NA
+5   x 200
+> df[!bad,]
+  one two
+1   c   1
+2   b   2
+5   x 200
+> x <- c(1,2,NA,4,NA,5)
+> y <- c("a","b",NA,"d",NA,"f")
+> x
+[1]  1  2 NA  4 NA  5
+> y
+[1] "a" "b" NA  "d" NA  "f"
+> good <- complete.cases(x,y)
+starting httpd help server ... done
+> x[good]
+[1] 1 2 4 5
+> y[good]
+[1] "a" "b" "d" "f"
+> y <- c("a","b",NA,"d",NA,NA)
+> good <- complete.cases(x,y)
+> good
+[1]  TRUE  TRUE FALSE  TRUE FALSE FALSE
+> y[good]
+[1] "a" "b" "d"
+> x[good]
+[1] 1 2 4
+> x
+[1]  1  2 NA  4 NA  5
+> y
+[1] "a" "b" NA  "d" NA  NA 
+> airquality[1:6,]
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+5    NA      NA 14.3   56     5   5
+6    28      NA 14.9   66     5   6
+> airquality[1:6,1:2]
+  Ozone Solar.R
+1    41     190
+2    36     118
+3    12     149
+4    18     313
+5    NA      NA
+6    28      NA
+> airquality[,]
+    Ozone Solar.R Wind Temp Month Day
+1      41     190  7.4   67     5   1
+2      36     118  8.0   72     5   2
+3      12     149 12.6   74     5   3
+4      18     313 11.5   62     5   4
+5      NA      NA 14.3   56     5   5
+6      28      NA 14.9   66     5   6
+7      23     299  8.6   65     5   7
+8      19      99 13.8   59     5   8
+9       8      19 20.1   61     5   9
+10     NA     194  8.6   69     5  10
+11      7      NA  6.9   74     5  11
+12     16     256  9.7   69     5  12
+13     11     290  9.2   66     5  13
+14     14     274 10.9   68     5  14
+15     18      65 13.2   58     5  15
+16     14     334 11.5   64     5  16
+17     34     307 12.0   66     5  17
+18      6      78 18.4   57     5  18
+19     30     322 11.5   68     5  19
+20     11      44  9.7   62     5  20
+21      1       8  9.7   59     5  21
+22     11     320 16.6   73     5  22
+23      4      25  9.7   61     5  23
+24     32      92 12.0   61     5  24
+25     NA      66 16.6   57     5  25
+26     NA     266 14.9   58     5  26
+27     NA      NA  8.0   57     5  27
+28     23      13 12.0   67     5  28
+29     45     252 14.9   81     5  29
+30    115     223  5.7   79     5  30
+31     37     279  7.4   76     5  31
+32     NA     286  8.6   78     6   1
+33     NA     287  9.7   74     6   2
+34     NA     242 16.1   67     6   3
+35     NA     186  9.2   84     6   4
+36     NA     220  8.6   85     6   5
+37     NA     264 14.3   79     6   6
+38     29     127  9.7   82     6   7
+39     NA     273  6.9   87     6   8
+40     71     291 13.8   90     6   9
+41     39     323 11.5   87     6  10
+42     NA     259 10.9   93     6  11
+43     NA     250  9.2   92     6  12
+44     23     148  8.0   82     6  13
+45     NA     332 13.8   80     6  14
+46     NA     322 11.5   79     6  15
+47     21     191 14.9   77     6  16
+48     37     284 20.7   72     6  17
+49     20      37  9.2   65     6  18
+50     12     120 11.5   73     6  19
+51     13     137 10.3   76     6  20
+52     NA     150  6.3   77     6  21
+53     NA      59  1.7   76     6  22
+54     NA      91  4.6   76     6  23
+55     NA     250  6.3   76     6  24
+56     NA     135  8.0   75     6  25
+57     NA     127  8.0   78     6  26
+58     NA      47 10.3   73     6  27
+59     NA      98 11.5   80     6  28
+60     NA      31 14.9   77     6  29
+61     NA     138  8.0   83     6  30
+62    135     269  4.1   84     7   1
+63     49     248  9.2   85     7   2
+64     32     236  9.2   81     7   3
+65     NA     101 10.9   84     7   4
+66     64     175  4.6   83     7   5
+67     40     314 10.9   83     7   6
+68     77     276  5.1   88     7   7
+69     97     267  6.3   92     7   8
+70     97     272  5.7   92     7   9
+71     85     175  7.4   89     7  10
+72     NA     139  8.6   82     7  11
+73     10     264 14.3   73     7  12
+74     27     175 14.9   81     7  13
+75     NA     291 14.9   91     7  14
+76      7      48 14.3   80     7  15
+77     48     260  6.9   81     7  16
+78     35     274 10.3   82     7  17
+79     61     285  6.3   84     7  18
+80     79     187  5.1   87     7  19
+81     63     220 11.5   85     7  20
+82     16       7  6.9   74     7  21
+83     NA     258  9.7   81     7  22
+84     NA     295 11.5   82     7  23
+85     80     294  8.6   86     7  24
+86    108     223  8.0   85     7  25
+87     20      81  8.6   82     7  26
+88     52      82 12.0   86     7  27
+89     82     213  7.4   88     7  28
+90     50     275  7.4   86     7  29
+91     64     253  7.4   83     7  30
+92     59     254  9.2   81     7  31
+93     39      83  6.9   81     8   1
+94      9      24 13.8   81     8   2
+95     16      77  7.4   82     8   3
+96     78      NA  6.9   86     8   4
+97     35      NA  7.4   85     8   5
+98     66      NA  4.6   87     8   6
+99    122     255  4.0   89     8   7
+100    89     229 10.3   90     8   8
+101   110     207  8.0   90     8   9
+102    NA     222  8.6   92     8  10
+103    NA     137 11.5   86     8  11
+104    44     192 11.5   86     8  12
+105    28     273 11.5   82     8  13
+106    65     157  9.7   80     8  14
+107    NA      64 11.5   79     8  15
+108    22      71 10.3   77     8  16
+109    59      51  6.3   79     8  17
+110    23     115  7.4   76     8  18
+111    31     244 10.9   78     8  19
+112    44     190 10.3   78     8  20
+113    21     259 15.5   77     8  21
+114     9      36 14.3   72     8  22
+115    NA     255 12.6   75     8  23
+116    45     212  9.7   79     8  24
+117   168     238  3.4   81     8  25
+118    73     215  8.0   86     8  26
+119    NA     153  5.7   88     8  27
+120    76     203  9.7   97     8  28
+121   118     225  2.3   94     8  29
+122    84     237  6.3   96     8  30
+123    85     188  6.3   94     8  31
+124    96     167  6.9   91     9   1
+125    78     197  5.1   92     9   2
+126    73     183  2.8   93     9   3
+127    91     189  4.6   93     9   4
+128    47      95  7.4   87     9   5
+129    32      92 15.5   84     9   6
+130    20     252 10.9   80     9   7
+131    23     220 10.3   78     9   8
+132    21     230 10.9   75     9   9
+133    24     259  9.7   73     9  10
+134    44     236 14.9   81     9  11
+135    21     259 15.5   76     9  12
+136    28     238  6.3   77     9  13
+137     9      24 10.9   71     9  14
+138    13     112 11.5   71     9  15
+139    46     237  6.9   78     9  16
+140    18     224 13.8   67     9  17
+141    13      27 10.3   76     9  18
+142    24     238 10.3   68     9  19
+143    16     201  8.0   82     9  20
+144    13     238 12.6   64     9  21
+145    23      14  9.2   71     9  22
+146    36     139 10.3   81     9  23
+147     7      49 10.3   69     9  24
+148    14      20 16.6   63     9  25
+149    30     193  6.9   70     9  26
+150    NA     145 13.2   77     9  27
+151    14     191 14.3   75     9  28
+152    18     131  8.0   76     9  29
+153    20     223 11.5   68     9  30
+> airquality[1:6,]
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+5    NA      NA 14.3   56     5   5
+6    28      NA 14.9   66     5   6
+> completed <- complete.cases(airquality)
+> completed
+  [1]  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [18]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+ [35] FALSE FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
+ [52] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE
+ [69]  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE
+ [86]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE FALSE
+[103] FALSE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE FALSE
+[120]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[137]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE
+> airquality[completed]
+Error in `[.data.frame`(airquality, completed) : 
+  undefined columns selected
+> airquality[completed,]
+    Ozone Solar.R Wind Temp Month Day
+1      41     190  7.4   67     5   1
+2      36     118  8.0   72     5   2
+3      12     149 12.6   74     5   3
+4      18     313 11.5   62     5   4
+7      23     299  8.6   65     5   7
+8      19      99 13.8   59     5   8
+9       8      19 20.1   61     5   9
+12     16     256  9.7   69     5  12
+13     11     290  9.2   66     5  13
+14     14     274 10.9   68     5  14
+15     18      65 13.2   58     5  15
+16     14     334 11.5   64     5  16
+17     34     307 12.0   66     5  17
+18      6      78 18.4   57     5  18
+19     30     322 11.5   68     5  19
+20     11      44  9.7   62     5  20
+21      1       8  9.7   59     5  21
+22     11     320 16.6   73     5  22
+23      4      25  9.7   61     5  23
+24     32      92 12.0   61     5  24
+28     23      13 12.0   67     5  28
+29     45     252 14.9   81     5  29
+30    115     223  5.7   79     5  30
+31     37     279  7.4   76     5  31
+38     29     127  9.7   82     6   7
+40     71     291 13.8   90     6   9
+41     39     323 11.5   87     6  10
+44     23     148  8.0   82     6  13
+47     21     191 14.9   77     6  16
+48     37     284 20.7   72     6  17
+49     20      37  9.2   65     6  18
+50     12     120 11.5   73     6  19
+51     13     137 10.3   76     6  20
+62    135     269  4.1   84     7   1
+63     49     248  9.2   85     7   2
+64     32     236  9.2   81     7   3
+66     64     175  4.6   83     7   5
+67     40     314 10.9   83     7   6
+68     77     276  5.1   88     7   7
+69     97     267  6.3   92     7   8
+70     97     272  5.7   92     7   9
+71     85     175  7.4   89     7  10
+73     10     264 14.3   73     7  12
+74     27     175 14.9   81     7  13
+76      7      48 14.3   80     7  15
+77     48     260  6.9   81     7  16
+78     35     274 10.3   82     7  17
+79     61     285  6.3   84     7  18
+80     79     187  5.1   87     7  19
+81     63     220 11.5   85     7  20
+82     16       7  6.9   74     7  21
+85     80     294  8.6   86     7  24
+86    108     223  8.0   85     7  25
+87     20      81  8.6   82     7  26
+88     52      82 12.0   86     7  27
+89     82     213  7.4   88     7  28
+90     50     275  7.4   86     7  29
+91     64     253  7.4   83     7  30
+92     59     254  9.2   81     7  31
+93     39      83  6.9   81     8   1
+94      9      24 13.8   81     8   2
+95     16      77  7.4   82     8   3
+99    122     255  4.0   89     8   7
+100    89     229 10.3   90     8   8
+101   110     207  8.0   90     8   9
+104    44     192 11.5   86     8  12
+105    28     273 11.5   82     8  13
+106    65     157  9.7   80     8  14
+108    22      71 10.3   77     8  16
+109    59      51  6.3   79     8  17
+110    23     115  7.4   76     8  18
+111    31     244 10.9   78     8  19
+112    44     190 10.3   78     8  20
+113    21     259 15.5   77     8  21
+114     9      36 14.3   72     8  22
+116    45     212  9.7   79     8  24
+117   168     238  3.4   81     8  25
+118    73     215  8.0   86     8  26
+120    76     203  9.7   97     8  28
+121   118     225  2.3   94     8  29
+122    84     237  6.3   96     8  30
+123    85     188  6.3   94     8  31
+124    96     167  6.9   91     9   1
+125    78     197  5.1   92     9   2
+126    73     183  2.8   93     9   3
+127    91     189  4.6   93     9   4
+128    47      95  7.4   87     9   5
+129    32      92 15.5   84     9   6
+130    20     252 10.9   80     9   7
+131    23     220 10.3   78     9   8
+132    21     230 10.9   75     9   9
+133    24     259  9.7   73     9  10
+134    44     236 14.9   81     9  11
+135    21     259 15.5   76     9  12
+136    28     238  6.3   77     9  13
+137     9      24 10.9   71     9  14
+138    13     112 11.5   71     9  15
+139    46     237  6.9   78     9  16
+140    18     224 13.8   67     9  17
+141    13      27 10.3   76     9  18
+142    24     238 10.3   68     9  19
+143    16     201  8.0   82     9  20
+144    13     238 12.6   64     9  21
+145    23      14  9.2   71     9  22
+146    36     139 10.3   81     9  23
+147     7      49 10.3   69     9  24
+148    14      20 16.6   63     9  25
+149    30     193  6.9   70     9  26
+151    14     191 14.3   75     9  28
+152    18     131  8.0   76     9  29
+153    20     223 11.5   68     9  30
+> airquality[completed,][1:6,]
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+7    23     299  8.6   65     5   7
+8    19      99 13.8   59     5   8
+> airquality[completed,][1:5,]
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+3    12     149 12.6   74     5   3
+4    18     313 11.5   62     5   4
+7    23     299  8.6   65     5   7
+> airquality[completed,][1:2,]
+  Ozone Solar.R Wind Temp Month Day
+1    41     190  7.4   67     5   1
+2    36     118  8.0   72     5   2
+> data <- read.table("foo.txt")
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") : cannot open file 'foo.txt': No such file or directory
+> pwd
+Error: object 'pwd' not found
+> getwd
+function () 
+.Internal(getwd())
+<bytecode: 0x10227fae0>
+<environment: namespace:base>
+> getwd()
+[1] "/Users/kiichi/work/r/class/2/week1"
+> data <- read.table("foo.txt")
+> data
+           V1
+1 hello,world
+2         1,2
+3     3.0,4.0
+> rnum(data)
+Error: could not find function "rnum"
+> ncol(data)
+[1] 1
+> nrow(data)
+[1] 3
+> data <- read.csv("foot.txt")
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'foot.txt': No such file or directory
+> data <- read.csv("foo.txt")
+> data <- read.csv("foo.txt")
+> data
+  hello world
+1     1     2
+2     3     4
+> data <- read.table("foo.txt",comment.char="")
+> data
+           V1
+1 hello,world
+2         1,2
+3     3.0,4.0
+> 
