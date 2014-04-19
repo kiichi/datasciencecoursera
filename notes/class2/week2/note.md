@@ -12,18 +12,22 @@
 
 ```rconsole
 x[!is.na(x)]
+vect <- c(foo=11,bar=2,norf=NA)
 ```
 
 ```s
 x[!is.na(x)]
+vect <- c(foo=11,bar=2,norf=NA)
 ```
 
 ```splus
 x[!is.na(x)]
+vect <- c(foo=11,bar=2,norf=NA)
 ```
 
 ```rout
 x[!is.na(x)]
+vect <- c(foo=11,bar=2,norf=NA)
 ```
 
 equivalent in sql like
