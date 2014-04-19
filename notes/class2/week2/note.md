@@ -10,7 +10,7 @@
 
 ##Only clean values - remove NA
 
-```{r}
+```rconsole
 x[!is.na(x)]
 ```
 
