@@ -9,7 +9,7 @@
 #Data Frame Example
 
 ##Only clean values - remove NA
-```r
+```{r}
  x[!is.na(x)]
 ```
 
