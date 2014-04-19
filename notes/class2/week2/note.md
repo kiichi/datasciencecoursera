@@ -1,4 +1,4 @@
-#Notes from Week1
+Misc Memo
 * dump and dput are serializers
 * directly read-write gzip,web, etc
 * SWIRL is an interactive learning system for R
