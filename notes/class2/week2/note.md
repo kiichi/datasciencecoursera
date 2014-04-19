@@ -1,20 +1,23 @@
 #Notes from Week1
-*dump and dput are serializers
-*directly read-write gzip,web, etc
-*SWIRL is an interactive learning system for R
-*NaN - Not a Number 
+* dump and dput are serializers
+* directly read-write gzip,web, etc
+* SWIRL is an interactive learning system for R
+* NaN - Not a Number 
 
 
 
 #Data Frame Example
 
 ##Only clean values - remove NA
-
+```r
  x[!is.na(x)]
+```
 
 equivalent in sql like
 
+```sql
  IS NOT NULL AND X > 0
+```
 
 also filter like
 
