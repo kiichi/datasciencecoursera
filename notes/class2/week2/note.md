@@ -14,6 +14,18 @@
 x[!is.na(x)]
 ```
 
+```s
+x[!is.na(x)]
+```
+
+```splus
+x[!is.na(x)]
+```
+
+```rout
+x[!is.na(x)]
+```
+
 equivalent in sql like
 
 ```sql
