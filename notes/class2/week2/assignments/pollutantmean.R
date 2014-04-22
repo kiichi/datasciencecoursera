@@ -13,6 +13,10 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
     print("ERROR: invalid id found. Please specify between 1 and 332")    
   }
   
+  #shortcut - the sprintf in R can take the vector 
+  #which returns another vector like this below
+  #filenames <- sprintf("%s/%.3d.csv",directory,ip)
+  
   vals <- vector() # create an empty vector
   for (i in id){    
     file_name <- sprintf("%s/%.3d.csv",directory,i)
