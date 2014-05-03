@@ -14,10 +14,7 @@
 #   The best hospital name in that state with lowest 30-day death
 best<-function(state,outcome){  
   data<-read.csv("outcome-of-care-measures.csv", colClasses = "character")  
-  valid_outcome = c("heart attack","heart failure","pneumonia")  
-  
   ## Check that state and outcome are valid
-  
   if (!any(data['State'] == state)){
     stop("invalid state”")
   }
