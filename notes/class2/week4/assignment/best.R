@@ -1,11 +1,6 @@
-#Week 4 Assignment 
-
-
-#Ignoring NA related warning message...
-#   In eval(expr, envir, enclos) : NAs introduced by coercion
-
 #-------------------------------------------------------
-#Part 2 best function
+# Week 4 Assignment 
+# Part 2 best function
 # Find the best hospital for a specific outcome criteria per state
 # Parameters:
 #   - state code (e.g "NY")
@@ -82,6 +77,8 @@ best("NY", "hert attack") #error
 
 # [1] "SOUTHEAST ALABAMA MEDICAL CENTER" "MARSHALL MEDICAL CENTER SOUTH"    "ELIZA COFFEE MEMORIAL HOSPITAL"  
 # [4] "MIZELL MEMORIAL HOSPITAL"         "CRENSHAW COMMUNITY HOSPITAL"      "MARSHALL MEDICAL CENTER NORTH"   
+#Ignoring NA related warning message...
+#   In eval(expr, envir, enclos) : NAs introduced by coercion
 
 
 
