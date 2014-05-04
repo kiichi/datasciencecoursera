@@ -72,13 +72,14 @@ rankall<-function(outcome,num="best"){
 # WY "NORTH BIG HORN HOSPITAL DISTRICT"           "WY" 
 
 #print(tail(rankall("heart failure"), 10))
-# TN "WELLMONT HAWKINS COUNTY MEMORIAL HOSPITAL"                         "TN" 
-# TX "FORT DUNCAN MEDICAL CENTER"                                        "TX" 
-# UT "VA SALT LAKE CITY HEALTHCARE - GEORGE E. WAHLEN VA MEDICAL CENTER" "UT" 
-# VA "SENTARA POTOMAC HOSPITAL"                                          "VA" 
-# VI "GOV JUAN F LUIS HOSPITAL & MEDICAL CTR"                            "VI" 
-# VT "SPRINGFIELD HOSPITAL"                                              "VT" 
-# WA "HARBORVIEW MEDICAL CENTER"                                         "WA" 
-# WI "WAUKESHA MEMORIAL HOSPITAL"                                        "WI" 
-# WV "FAIRMONT GENERAL HOSPITAL"                                         "WV" 
-# WY "CHEYENNE VA MEDICAL CENTER"                                        "WY" 
+# hospital state
+# TN                         WELLMONT HAWKINS COUNTY MEMORIAL HOSPITAL    TN
+# TX                                        FORT DUNCAN MEDICAL CENTER    TX
+# UT VA SALT LAKE CITY HEALTHCARE - GEORGE E. WAHLEN VA MEDICAL CENTER    UT
+# VA                                          SENTARA POTOMAC HOSPITAL    VA
+# VI                            GOV JUAN F LUIS HOSPITAL & MEDICAL CTR    VI
+# VT                                              SPRINGFIELD HOSPITAL    VT
+# WA                                         HARBORVIEW MEDICAL CENTER    WA
+# WI                                    AURORA ST LUKES MEDICAL CENTER    WI
+# WV                                         FAIRMONT GENERAL HOSPITAL    WV
+# WY                                        CHEYENNE VA MEDICAL CENTER    WY
