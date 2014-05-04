@@ -1,5 +1,5 @@
 #-------------------------------------------------------
-# Week 4 Assignment 
+# Week 4 Assignment
 # Part 2 best function
 # Find the best hospital for a specific outcome criteria per state
 # Parameters:
@@ -8,13 +8,13 @@
 # Return:
 #   The best hospital name in that state with lowest 30-day death
 #-------------------------------------------------------
-best<-function(state,outcome){  
-  data<-read.csv("outcome-of-care-measures.csv", colClasses = "character")  
+best<-function(state,outcome){
+  data<-read.csv("outcome-of-care-measures.csv", colClasses = "character")
   ## Check that state and outcome are valid
   if (!any(data['State'] == state)){
     stop("invalid state”")
   }
-  
+
   col = ''
   if (outcome == "heart attack"){
     col = 'Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack'
@@ -28,8 +28,8 @@ best<-function(state,outcome){
   #cast
   data[,col]<-as.numeric(data[,col])
   filtered <- split(data,data$State)[[state]]
-  rates<-filtered[[col]]  
-  filtered[which.min(rates),'Hospital.Name']  
+  rates<-filtered[[col]]
+  filtered[which.min(rates),'Hospital.Name']
 }
 
 
@@ -38,7 +38,7 @@ best<-function(state,outcome){
 # dir<-getwd()
 # print(dir)
 # setwd(dir)
-# 
+#
 # #### source("best.R")
 x<-best("TX","heart attack")
 print(x)
@@ -51,10 +51,10 @@ print(x)
 
 x<-best("MD", "pneumonia")
 print(x)
-# 
+#
 #best("BB", "heart attack") #error
 best("NY", "hert attack") #error
-# 
+#
 
 
 
@@ -76,10 +76,7 @@ best("NY", "hert attack") #error
 # print(head(outcome[,'Hospital.Name']))
 # hist(outcome[,11])
 
-# [1] "SOUTHEAST ALABAMA MEDICAL CENTER" "MARSHALL MEDICAL CENTER SOUTH"    "ELIZA COFFEE MEMORIAL HOSPITAL"  
-# [4] "MIZELL MEMORIAL HOSPITAL"         "CRENSHAW COMMUNITY HOSPITAL"      "MARSHALL MEDICAL CENTER NORTH"   
+# [1] "SOUTHEAST ALABAMA MEDICAL CENTER" "MARSHALL MEDICAL CENTER SOUTH"    "ELIZA COFFEE MEMORIAL HOSPITAL"
+# [4] "MIZELL MEMORIAL HOSPITAL"         "CRENSHAW COMMUNITY HOSPITAL"      "MARSHALL MEDICAL CENTER NORTH"
 #Ignoring NA related warning message...
 #   In eval(expr, envir, enclos) : NAs introduced by coercion
-
-
-
