@@ -38,24 +38,24 @@ user  system elapsed
 ```s
 sepal_l<-subset(iris,Species=='versicolor')[,'Sepal.Length']
 ```
-user  system elapsed 
-2.750   0.030   2.788 
+
+2.788 
 
 ---
 # data.frame row index
 ```s
 sepal_l<-iris[iris[,'Species'] == 'versicolor','Sepal.Length']
 ```
-user  system elapsed 
-0.854   0.009   0.865 
+
+0.865 
 
 ---
 # data.table row index
 ```s
 sepal_l<-iris_dt[iris_dt$Species == 'versicolor',Sepal.Length]    
 ```
-user  system elapsed 
-8.174   0.035   8.412 
+
+8.412 
 
 ---
 # data.table with setkey()
@@ -63,8 +63,8 @@ setkey() function is called once outside of measurement loop
 ```s
 sepal_l<-iris_dt['versicolor',Sepal.Length]    
 ```
-user  system elapsed 
-18.665   0.053  18.954 
+
+18.954 
 
 ---
 # Result
