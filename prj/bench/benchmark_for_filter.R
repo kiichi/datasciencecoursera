@@ -58,7 +58,7 @@ final[5,'elapsed']<-result[['elapsed']]
 
 
 print(final)
-#setwd("~/work/r/class/datasciencecoursera/prj/bench")
+setwd("~/work/r/class/datasciencecoursera/prj/bench")
 png(filename="./bench.png")
 render()
 dev.off()
