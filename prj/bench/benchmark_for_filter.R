@@ -2,7 +2,7 @@
 #to create subset
 library(datasets)
 library(data.table)
-tests<-c('split','subset','data.frame','data.table','data.table setkey')
+tests<-c('split','subset','data.frame','data.table','dt&setkey')
 final<-data.frame(name=tests,elapsed=0)
 
 print("using split() ------------------")
@@ -58,7 +58,7 @@ final[5,'elapsed']<-result[['elapsed']]
 
 
 print(final)
-
+#setwd("~/work/r/class/datasciencecoursera/prj/bench")
 png(filename="./bench.png")
 render()
 dev.off()
@@ -66,19 +66,19 @@ render()
 
 #------------------------------------------------
 render<-function(){
-  pl<-barplot(final[,'elapsed'],xlab='Type',ylab='Elapsed',names.arg=tests)
+  pl<-barplot(final[,'elapsed'],xlab='',ylab='Elapsed')
   text(pl, par('usr')[3], labels = tests, srt = 90, adj = c(1.1,1.1), xpd = TRUE, cex=.9)
   axis(2)
 }
 
 #------------------------------------------------
 
-#               name elapsed
-# 1             split   4.582
-# 2            subset   2.612
-# 3        data.frame   0.850
-# 4        data.table   7.537
-# 5 data.table setkey  18.618
+#           name elapsed
+# 1      split   4.727
+# 2     subset   2.709
+# 3 data.frame   1.111
+# 4 data.table   7.685
+# 5  dt&setkey  18.311
 
 # Benchmark result to filter out data frame! row index won!
 # [1] "using split ------------------"
