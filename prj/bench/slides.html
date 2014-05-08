@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      /* Slideshow styles */
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+      <!-- Slideshow Markdown -->
+
+
+# Subsetting Operation in R - Benchmark 
+
+split() v.s subset() v.s data.frame v.s data.table
+
+---
+# split()
+
+```s
+sepal_l<-split(iris,iris$Species)[['versicolor']][,'Sepal.Length']  
+```
+user  system elapsed 
+ 4.794   0.057   4.872 
+
+---
+# subset()
+```s
+sepal_l<-subset(iris,Species=='versicolor')[,'Sepal.Length']
+```
+user  system elapsed 
+2.750   0.030   2.788 
+
+---
+# data.frame row index
+```s
+sepal_l<-iris[iris[,'Species'] == 'versicolor','Sepal.Length']
+```
+user  system elapsed 
+0.854   0.009   0.865 
+
+---
+# data.table row index
+```s
+sepal_l<-iris_dt[iris_dt$Species == 'versicolor',Sepal.Length]    
+```
+user  system elapsed 
+8.174   0.035   8.412 
+
+---
+# data.table with setkey()
+setkey() function is called once outside of measurement loop
+```s
+sepal_l<-iris_dt['versicolor',Sepal.Length]    
+```
+user  system elapsed 
+18.665   0.053  18.954 
+
+---
+# Result
+
+data.frame row index won!
+
+![]()
+
+
+
+
+    </textarea>
+    <script type="text/javascript" src="remark.js">
+    </script>
+    <script type="text/javascript">
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
+

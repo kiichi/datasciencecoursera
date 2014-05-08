@@ -2,23 +2,27 @@
 #to create subset
 library(datasets)
 library(data.table)
+tests<-c('split','subset','data.frame','data.table','data.table setkey')
+final<-data.frame(name=tests,elapsed=0)
 
-print("using split ------------------")
+print("using split() ------------------")
 result<-system.time({
   for(i in 1:10000){
     sepal_l<-split(iris,iris$Species)[['versicolor']][,'Sepal.Length']  
   }
 })
 print(result)
+final[1,'elapsed']<-result[['elapsed']]
 
 
-print("using subset ------------------")
+print("using subset() function ------------------")
 result<-system.time({
   for(i in 1:10000){
     sepal_l<-subset(iris,Species=='versicolor')[,'Sepal.Length']
   }
 })
 print(result)
+final[2,'elapsed']<-result[['elapsed']]
 
 print("using data.frame row index ------------------")
 result<-system.time({
@@ -27,6 +31,7 @@ result<-system.time({
   }
 })
 print(result)
+final[3,'elapsed']<-result[['elapsed']]
 
 #convert
 iris_dt<-data.table(iris)
@@ -38,6 +43,7 @@ result<-system.time({
   }
 })
 print(result)
+final[4,'elapsed']<-result[['elapsed']]
 
 
 setkey(iris_dt,Species)
@@ -48,10 +54,32 @@ result<-system.time({
   }
 })
 print(result)
-      
+final[5,'elapsed']<-result[['elapsed']]
 
+
+print(final)
+
+png(filename="./bench.png")
+render()
+dev.off()
+render()
 
 #------------------------------------------------
+render<-function(){
+  pl<-barplot(final[,'elapsed'],xlab='Type',ylab='Elapsed',names.arg=tests)
+  text(pl, par('usr')[3], labels = tests, srt = 90, adj = c(1.1,1.1), xpd = TRUE, cex=.9)
+  axis(2)
+}
+
+#------------------------------------------------
+
+#               name elapsed
+# 1             split   4.582
+# 2            subset   2.612
+# 3        data.frame   0.850
+# 4        data.table   7.537
+# 5 data.table setkey  18.618
+
 # Benchmark result to filter out data frame! row index won!
 # [1] "using split ------------------"
 # user  system elapsed 
@@ -68,7 +96,6 @@ print(result)
 # [1] "using data.table with setkey ------------------"
 # user  system elapsed 
 # 18.212   0.045  18.286 
-
 
 
 
