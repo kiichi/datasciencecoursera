@@ -8,3 +8,7 @@ Histgram and MDS
 * Good example of bimodal histogram and you will see 2 clusters for each doctor.
 This could be because they do first round and second round in 24 hours? See those
 images in the same directory.
+
+https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/prj/dist_hist/Mike%20Smith_hist.png
+
+https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/prj/dist_hist/Mike%20Smith_mds.png
