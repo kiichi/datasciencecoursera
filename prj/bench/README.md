@@ -2,7 +2,16 @@
 
 http://htmlpreview.github.io/?https://github.com/kiichi/datasciencecoursera/blob/master/prj/bench/slides.html#1
 
+<<<<<<< HEAD
 # Subsetting Operation in R - Benchmark
+=======
+
+
+
+
+
+# Subsetting Operation in R - Benchmark 
+>>>>>>> a590a4524ac1029189f579137f6788b2436b36e0
 
 split() v.s subset() v.s data.frame v.s data.table
 
@@ -13,7 +22,11 @@ split() v.s subset() v.s data.frame v.s data.table
 sepal_l<-split(iris,iris$Species)[['versicolor']][,'Sepal.Length']  
 ```
 
+<<<<<<< HEAD
 
+=======
+4.872 
+>>>>>>> a590a4524ac1029189f579137f6788b2436b36e0
 
 ---
 # subset()
@@ -21,22 +34,41 @@ sepal_l<-split(iris,iris$Species)[['versicolor']][,'Sepal.Length']
 sepal_l<-subset(iris,Species=='versicolor')[,'Sepal.Length']
 ```
 
+<<<<<<< HEAD
+=======
+2.788 
+
+>>>>>>> a590a4524ac1029189f579137f6788b2436b36e0
 ---
 # data.frame row index
 ```s
 sepal_l<-iris[iris[,'Species'] == 'versicolor','Sepal.Length']
 ```
 
+<<<<<<< HEAD
 ---
 # data.table row index
 ```s
 sepal_l<-iris_dt[iris_dt$Species == 'versicolor',Sepal.Length]
 ```
 
+=======
+0.865 
+
+---
+# data.table row index
+```s
+sepal_l<-iris_dt[iris_dt$Species == 'versicolor',Sepal.Length]    
+```
+
+8.412 
+
+>>>>>>> a590a4524ac1029189f579137f6788b2436b36e0
 ---
 # data.table with setkey()
 setkey() function is called once outside of measurement loop
 ```s
+<<<<<<< HEAD
 sepal_l<-iris_dt['versicolor',Sepal.Length]
 ```
 ---
@@ -79,3 +111,16 @@ Anyway, this is just conventional way to search through the dataset for people w
 with R syntax or migrating from RDB environment but no cost to re-implement in R.
 
 ![](https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/prj/bench/bench_with_sql.png)
+=======
+sepal_l<-iris_dt['versicolor',Sepal.Length]    
+```
+
+18.954 
+
+---
+# Result
+
+data.frame row index won!
+
+![](https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/prj/bench/bench.png)
+>>>>>>> a590a4524ac1029189f579137f6788b2436b36e0
