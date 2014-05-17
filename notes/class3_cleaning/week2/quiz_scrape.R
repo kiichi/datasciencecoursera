@@ -1,0 +1,10 @@
+
+conn=url("http://biostat.jhsph.edu/~jleek/contact.html")
+html=readLines(conn)
+print(html[c(10,20,30,100)])
+print(nchar(html[10]))
+print(nchar(html[20]))
+print(nchar(html[30]))
+print(nchar(html[100]))
+print(sapply(html[c(10,20,30,100)],nchar))
+close(conn)
