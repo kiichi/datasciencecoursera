@@ -75,6 +75,19 @@ p<-g+geom_line()+coord_cartesian(ylim=c(0,500))
 
 
 
+# More Examples
+# gg24.png
+#
+# > library(ggplot2)
+# > g <- ggplot(movies, aes(votes, rating))
+# > print(g)
+# Error: No layers in plot
+# > p<-g+geom_point()
+# > p
+
+
+qplot(votes, rating, data = movies, smooth = "loess")
+
 
 
 

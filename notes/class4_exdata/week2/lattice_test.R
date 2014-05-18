@@ -75,6 +75,7 @@ p<-xyplot(y~x|f, panel = function(x,y,...){
   panel.xyplot(x,y,...)           # call base plot first
   panel.abline(h=median(y),lty=2) # mean line type 2 = dotted
   panel.lmline(x,y,col=2)         # regression line color=red  
+  llines(x,y)
 })
 print(p)
 

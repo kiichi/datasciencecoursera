@@ -11,7 +11,7 @@ url<-"https://api.github.com/repos/jtleek/datasharing"
 #url<-"https://api.github.com/user"
 #url -u <token>:x-oauth-basic https://api.github.com/user
 #worked
-response=GET(url,authenticate("kiichi","94c13fe6d9296f87e53885e4236a58aa12220e78"))
+response=GET(url,authenticate("kiichi",""))
 json=content(response)
 
 #convert to data.frame
