@@ -40,11 +40,10 @@ p<-xyplot(Ozone~Wind | Month,airquality, layout=c(5,1))
 # but wait, the label for each month just repeating like "Month"
 # how do I show "5" or "6" instead?
 
-# Solution: transform the Month as categorical data usinc factor function
+# Solution: you neeed categorical data using Month
 # Therefore, each row contains Month value as number
 # lattice4.png
-airquality<-transform(airquality, Month=factor(Month))
-p<-xyplot(Ozone~Wind | Month,airquality)
+p<-xyplot(Ozone~Wind | factor(Month),airquality)
 #print(p)
 
 # lattice function does not draw, but you have to specify which device to draw
