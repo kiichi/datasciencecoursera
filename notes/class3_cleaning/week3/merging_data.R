@@ -13,6 +13,7 @@ iris_record<-data.frame(Taxon=c('virginica','versicolor','setosa'),recordedby=c(
 # 2 versicolor       John
 # 3     setosa       Mary
 
+joined<-merge(iris,iris_record,by.x="Species",by.y="Taxon")#strict
 joined<-merge(iris,iris_record,by.x="Species",by.y="Taxon",all=TRUE)
 #         Species Sepal.Length Sepal.Width Petal.Length Petal.Width recordedby
 # 1       setosa          5.1         3.5          1.4         0.2       Mary

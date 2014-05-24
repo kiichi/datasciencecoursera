@@ -1,3 +1,5 @@
+# set the current directory first
+
 #----------------------------------------------------------------------
 # Download Data
 url<-"https://data.baltimorecity.gov/api/views/k5ry-ef3g/rows.csv?accessType=DOWNLOAD"

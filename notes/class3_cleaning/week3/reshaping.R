@@ -1,5 +1,6 @@
 # melting and averaging
 library(reshape2)
+library(plyr)
 head(mtcars)
 #                     mpg cyl disp  hp drat    wt  qsec vs am gear carb
 # Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
@@ -20,7 +21,9 @@ head(carmelt)
 # 3        Datsun 710    4   4      mpg  22.8
 
 #--------------------------------------------------------------------------
-# Cast functions - cast a molten Data Frames
+# Cast functions - Pivot and Count
+
+# SELECT COL1,COL2,COUNT(*) FROM A GROUP BY COL1,COL2
 
 #cyl summarized by variable 
 cyldata<-dcast(carmelt,cyl~variable)
@@ -40,7 +43,7 @@ cyldata2<-dcast(carmelt,cyl~variable,mean)
 
 
 #--------------------------------------------------
-# Averaging by Group
+# Sum/Averaging by Group
 
 # Method 1 - tapply
 tapply(iris$Sepal.Length,iris$Species,sum)
