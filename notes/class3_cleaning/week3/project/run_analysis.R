@@ -1,4 +1,6 @@
 library(data.table)
+library(reshape2)
+library(plyr)
 
 #=====================================================================================
 # buildData Function
@@ -15,7 +17,7 @@ library(data.table)
 # Return: data.table 
 #
 #=====================================================================================
-buildData<-function(datatype,row_num=-1){
+buildData<-function(datatype="train",row_num=-1){
   
   # Lookup Tables
   features<-read.table("./data/features.txt")
@@ -24,7 +26,7 @@ buildData<-function(datatype,row_num=-1){
   subject_dt<-read.table(sprintf("./data/%s/subject_%s.txt",datatype,datatype), nrows=row_num)
   activity_dt<-read.table(sprintf("./data/%s/y_%s.txt",datatype,datatype), nrows=row_num)
   activity_labels<-read.table("./data/activity_labels.txt") 
-  activity_dt<-merge(activity_dt,activity_labels)
+  activity_joined<-join(activity_dt,activity_labels)
   
   data<-read.table(sprintf("./data/%s/X_%s.txt", datatype, datatype),            
               col.names=features[["V2"]],
@@ -32,18 +34,18 @@ buildData<-function(datatype,row_num=-1){
   
   data<-data[,selected_features] # clean up by selected columns    
   
-  data<-cbind(activity_dt,data)
-  names(data)[names(data) == "V1"] = "activity"
+  data<-cbind(activity_joined,data)
+  names(data)[names(data) == "V1"] = "activity_id"
   
   data<-cbind(subject_dt,data)
   names(data)[names(data) == "V1"] = "subject"
     
-  names(data)[names(data) == "V2"] = "activity label"
+  names(data)[names(data) == "V2"] = "activity"
   
   #fix colnames  
   # prefix - t means Time
   # prefix - f means Frequency Domain Signals
-  names(data)<-gsub("^f", "frequency ", gsub("^t","time ",gsub("   "," ",gsub("\\."," ",tolower(names(data))))))
+  names(data)<-gsub("  $","",gsub("^f", "frequency ", gsub("^t","time ",gsub("   "," ",gsub("\\."," ",tolower(names(data)))))))
   
   # return the result
   data
@@ -57,19 +59,26 @@ buildData<-function(datatype,row_num=-1){
 #
 #=====================================================================================
 
-
-
 # A variable for testing purpose.
 #   - Set 10 for faster reading for testing. Just for my development purpose to speedup.
 #   - Set -1 for production mode.
 row_num<--1
 
 # Output File Path
-tidy_file<-"./data/tidy.csv"
+tidy_file<-"./data/tidy_combined.csv"
+summary_file<-"./data/tidy_average.csv"
 
 # build traina and test data.table, then combine them
 result<-buildData("train",row_num)
 result<-rbind(result,buildData("test",row_num))
 
-# File Export
+# File Export 1 - tidy dataset
 write.csv(result,file=tidy_file,row.names=F)
+
+result_summary<-ddply(result,.(subject,activity),function(x){
+  colMeans(x[,4:length(x)])
+})
+
+# File Export 2 - summary dataset
+write.csv(result_summary,file=summary_file,row.names=F)
+

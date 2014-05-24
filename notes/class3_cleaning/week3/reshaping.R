@@ -1,6 +1,7 @@
 # melting and averaging
 library(reshape2)
 library(plyr)
+library(Hmisc)
 head(mtcars)
 #                     mpg cyl disp  hp drat    wt  qsec vs am gear carb
 # Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
@@ -57,20 +58,26 @@ unlist(lapply(sp,sum))
 # 250.3      296.8      329.4 
 
 # Method 3 - ddply in plyr package
-ddply(iris,.(Species),summarize,sum=sum(Sepal.Length))
+ddply(iris,.(Species),summarise,sum=sum(Sepal.Length))
 # Species   sum
 # 1     setosa 250.3
 # 2 versicolor 296.8
 # 3  virginica 329.4
 
-ddply(iris,.(Species),summarize,sum=ave(Sepal.Length,FUN=sum))
+ddply(iris,.(Species),summarise,sum=ave(Sepal.Length,FUN=sum))
 #       Species   sum
 # 1       setosa 250.3
 # 2       setosa 250.3
 # 3       setosa 250.3
 
 
-
+ddply(iris,"Species",function(X) {
+  data.frame(weighted_mean=weighted.mean(X$Sepal.Length,mn=mean(X$Sepal.Length)))
+})
+#      Species weighted_mean
+# 1     setosa         5.006
+# 2 versicolor         5.936
+# 3  virginica         6.588
 
 
 
