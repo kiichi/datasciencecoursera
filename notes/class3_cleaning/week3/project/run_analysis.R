@@ -21,11 +21,11 @@ buildData<-function(datatype="train",row_num=-1){
   
   # Lookup Tables
   features<-read.table("./data/features.txt")
-  selected_features<-(features[["V2"]] %like% "std\\(\\)" | features[["V2"]] %like% "mean\\(\\)")   
-  
+  selected_features<-(features[["V2"]] %like% "std\\(\\)" | features[["V2"]] %like% "mean\\(\\)")     
   subject_dt<-read.table(sprintf("./data/%s/subject_%s.txt",datatype,datatype), nrows=row_num)
   activity_dt<-read.table(sprintf("./data/%s/y_%s.txt",datatype,datatype), nrows=row_num)
   activity_labels<-read.table("./data/activity_labels.txt") 
+  
   activity_joined<-join(activity_dt,activity_labels)
   
   data<-read.table(sprintf("./data/%s/X_%s.txt", datatype, datatype),            
