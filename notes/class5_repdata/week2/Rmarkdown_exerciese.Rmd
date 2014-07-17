@@ -1,0 +1,43 @@
+---
+title: "R Markdown Exercise"
+author: "Kiichi Takeuchi"
+date: "July 16, 2014"
+output: html_document
+---
+
+This is my exercise to use R Markdown file with Knitr Package. 
+The final product would be exported as HTML file.
+
+```{r}
+library(datasets)
+data(airquality)
+summary(airquality)
+```
+
+Trying pair function ...
+
+```{r}
+pairs(airquality)
+```
+
+Regression Model of Ozone over Solar Radiation, Wind and Temperature.
+
+```{r}
+library(stats)
+fit <- lm(Ozone ~ Solar.R + Wind + Temp, data = airquality)
+summary(fit)
+```
+
+#Summary
+
+* Looks like Ozone is correlated with Temperature.
+* And so on.
+
+
+
+
+
+
+
+
+
