@@ -12,3 +12,4 @@
 submitscript*
 storm*
 *.swp
+*_cache*
