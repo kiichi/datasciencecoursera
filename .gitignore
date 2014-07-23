@@ -10,3 +10,5 @@
 .DS_Store
 
 submitscript*
+storm*
+*.swp

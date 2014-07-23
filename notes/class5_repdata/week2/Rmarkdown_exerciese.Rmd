@@ -8,15 +8,31 @@ output: html_document
 This is my exercise to use R Markdown file with Knitr Package. 
 The final product would be exported as HTML file.
 
-```{r}
+```{r mycodechunk}
 library(datasets)
 data(airquality)
 summary(airquality)
 ```
 
-Trying pair function ...
+You should not see code chunk below:
+```{r hiddenchunk,echo=FALSE,results='hide',cache=TRUE}
+a<-rnorm(100)
+# DO NOT SHOW THIS CHUNK
+print(a)
+# DO NOT EVEN SHOW THE RESULTS
+```
+Resuming R Markdown.
+
 
 ```{r}
+rval<-rnorm(1)
+```
+
+Alias to random number from above: `r rval`
+
+Trying pair function ...
+
+```{r fig.height=10}
 pairs(airquality)
 ```
 
@@ -28,11 +44,31 @@ fit <- lm(Ozone ~ Solar.R + Wind + Temp, data = airquality)
 summary(fit)
 ```
 
+Here, use xtable to format the results
+
+```{r results='asis'}
+# Install xtable package
+library(xtable)
+xt <- xtable(summary(fit))
+print(xt,type='html')
+```
+
 #Summary
 
 * Looks like Ozone is correlated with Temperature.
 * And so on.
 
+#How to set code chunk Options Globally?
+
+```{r}
+# somehow thid does not work below??
+# opts_chunk$set(echo=FALSE,results="hide")
+```
+
+No more verbosing results below...
+```{r}
+print(100)
+```
 
 
 
