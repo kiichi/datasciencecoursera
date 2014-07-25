@@ -60,9 +60,13 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 </div>
 
 
-<div id="setup" class="section level2">
-<h2>Setup</h2>
-<p>First, setup your work directory path. For example, here is my path below. If you are using R Studio, you can also set it from Session &gt; Set Working Directory &gt; To Source File Location.</p>
+<div id="synopsis" class="section level1">
+<h1>Synopsis</h1>
+<p>My goal of this report is to analyze impact of various weather events in the U.S in terms of population health and economic damage. I took the data from the U.S. National Oceanic and Atmospheric Administration’s (NOAA) storm database, and I am using R as programming language which the details are described below in multiple steps. This document contains the R code itself, results from analysis and instructions for your reproducibile process.</p>
+</div>
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<p>First, the work directory path needs to be setup. If you are using R Studio, you can also set it from Session &gt; Set Working Directory &gt; To Source File Location. Here is my example below.</p>
 <pre class="r"><code>setwd(&quot;~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2&quot;)</code></pre>
 <p>Below is the list of required R packages for this analysis:</p>
 <ul>
@@ -72,7 +76,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li>gridExtra</li>
 <li>??? … (add more)</li>
 </ul>
-<p>Download and extract Zip file if it was not extracted yet</p>
+<p>Download and extract the Zip file if it was not extracted yet</p>
 <pre class="r"><code>library(R.utils)</code></pre>
 <pre><code>## Loading required package: R.oo
 ## Loading required package: R.methodsS3
@@ -113,6 +117,10 @@ if (!file.exists(&quot;storm&quot;)){
 <li><a href="https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf">https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf</a></li>
 </ul>
 </div>
+<div id="data-processing" class="section level1">
+<h1>Data Processing</h1>
+<p>Below are steps of loading and processing data.</p>
+</div>
 <div id="load-library-and-utility-functions" class="section level1">
 <h1>Load Library and Utility Functions</h1>
 <pre class="r"><code>library(data.table)
@@ -123,9 +131,20 @@ cleanup &lt;- function (x)  {
 <h2>Loading Data</h2>
 <p>Next, load the data file. Since I got error with fread function, I’m using read.csv first, then I’m converting into data.table type.</p>
 <pre class="r"><code>d&lt;-data.table(read.csv(&quot;storm&quot;))</code></pre>
-<pre class="r"><code>d[,c(&quot;EVTYPE&quot;)] &lt;- cleanup(d[EVTYPE %like% 'SUMMARY',]$EVTYPE)</code></pre>
-<pre><code>## Warning: Supplied 3 items to be assigned to 902297 items of column
-## 'EVTYPE' (recycled leaving remainder of 2 items).</code></pre>
+<p>Here is my clean up policy below as you see in the code.</p>
+<ul>
+<li>Fix everything to upper case</li>
+<li>Remove all event that contains “summary” in the description</li>
+</ul>
+<pre class="r"><code># Upper case and Trim
+d[,c(&quot;EVTYPE&quot;)] &lt;- cleanup(d$EVTYPE)
+d[,c(&quot;PROPDMGEXP&quot;)] &lt;- cleanup(d$PROPDMGEXP)
+
+# Remove summary
+d&lt;-d[!(EVTYPE %like% 'SUMMARY'),]
+
+# Remove before 1995
+d&lt;-d[as.Date(d$BGN_DATE,&quot;%m/%d/%Y&quot;) &gt;= as.Date(&quot;1/1/1996&quot;,&quot;%m/%d/%Y&quot;),]</code></pre>
 <pre class="r"><code>colnames(d)</code></pre>
 <pre><code>##  [1] &quot;STATE__&quot;    &quot;BGN_DATE&quot;   &quot;BGN_TIME&quot;   &quot;TIME_ZONE&quot;  &quot;COUNTY&quot;    
 ##  [6] &quot;COUNTYNAME&quot; &quot;STATE&quot;      &quot;EVTYPE&quot;     &quot;BGN_RANGE&quot;  &quot;BGN_AZI&quot;   
@@ -136,13 +155,41 @@ cleanup &lt;- function (x)  {
 ## [31] &quot;ZONENAMES&quot;  &quot;LATITUDE&quot;   &quot;LONGITUDE&quot;  &quot;LATITUDE_E&quot; &quot;LONGITUDE_&quot;
 ## [36] &quot;REMARKS&quot;    &quot;REFNUM&quot;</code></pre>
 <pre class="r"><code>#PH - Public Health
-#EM - Economic Impact
+#ED - Economic Damage
 # Ranking
-rk&lt;-d[,list(PH=sum(FATALITIES,na.rm=T),EI=sum(PROPDMG,na.rm=T)),by=EVTYPE]
-rk[order(EVTYPE)]$EVTYPE</code></pre>
-<pre><code>## [1] SUMMARY OF MARCH 24-25 SUMMARY OF MARCH 27    SUMMARY OF MARCH 29   
-## 985 Levels:    HIGH SURF ADVISORY  COASTAL FLOOD ... WND</code></pre>
+rk&lt;-d[,list(PH=sum(FATALITIES,na.rm=T),ED=sum(PROPDMG,na.rm=T)),by=EVTYPE]
+#rk[order(EVTYPE)]$EVTYPE
+pd_rk&lt;-rk[order(PH,decreasing=T),EVTYPE,PH]
+ed_rk&lt;-rk[order(ED,decreasing=T),EVTYPE,ED]
+head(pd_rk,10)</code></pre>
+<pre><code>##       PH         EVTYPE
+##  1: 1797 EXCESSIVE HEAT
+##  2: 1511        TORNADO
+##  3:  887    FLASH FLOOD
+##  4:  651      LIGHTNING
+##  5:  414          FLOOD
+##  6:  340    RIP CURRENT
+##  7:  241      TSTM WIND
+##  8:  237           HEAT
+##  9:  235      HIGH WIND
+## 10:  223      AVALANCHE</code></pre>
+<pre class="r"><code>head(ed_rk,10)</code></pre>
+<pre><code>##          ED            EVTYPE
+##  1: 1330845         TSTM WIND
+##  2: 1247613       FLASH FLOOD
+##  3: 1187878           TORNADO
+##  4:  862257 THUNDERSTORM WIND
+##  5:  824937             FLOOD
+##  6:  575317              HAIL
+##  7:  488562         LIGHTNING
+##  8:  315098         HIGH WIND
+##  9:  126910      WINTER STORM
+## 10:   89393        HEAVY SNOW</code></pre>
+<pre class="r"><code>#d[,list(cnt=length(PROPDMGEXP)),by=toupper(PROPDMGEXP)][order(cnt,decreasing=T)]</code></pre>
 </div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
 </div>
 
 

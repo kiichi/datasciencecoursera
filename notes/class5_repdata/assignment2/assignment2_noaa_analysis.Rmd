@@ -5,8 +5,12 @@ date: "July 23, 2014"
 output: html_document
 ---
 
-##Setup
-First, setup your work directory path. For example, here is my path below. If you are using R Studio, you can also set it from Session > Set Working Directory > To Source File Location.
+#Synopsis
+
+My goal of this report is to analyze impact of various weather events in the U.S in terms of population health and economic damage. I took the data from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, and I am using R as programming language which the details are described below in multiple steps. This document contains the R code itself, results from analysis and instructions for your reproducibile process.
+
+#Setup
+First, the work directory path needs to be setup. If you are using R Studio, you can also set it from Session > Set Working Directory > To Source File Location. Here is my example below. 
 
 ```{r pathsetup,echo=TRUE}
 setwd("~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2")
@@ -20,7 +24,7 @@ Below is the list of required R packages for this analysis:
 * gridExtra
 * ??? ... (add more)
 
-Download and extract Zip file if it was not extracted yet
+Download and extract the Zip file if it was not extracted yet
 ```{r unzipping,echo=TRUE,results='hide'}
 
 library(R.utils)
@@ -38,8 +42,13 @@ As for references, you can take a look at NOAA's documentations.
 * https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf
 * https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf
 
+
+#Data Processing
+
+Below are steps of loading and processing data.
+
 #Load Library and Utility Functions
-```{r load_lib,echo=TRUE,cache=TRUE}
+```{r load_lib,echo=TRUE}
 library(data.table)
 cleanup <- function (x)  {
   toupper(gsub("^\\s+|\\s+$", "", x))
@@ -52,33 +61,44 @@ Next, load the data file. Since I got error with fread function, I'm using read.
 d<-data.table(read.csv("storm"))
 ```
 
-```{r preprocess,echo=TRUE,cache=TRUE}
-d[,c("EVTYPE")] <- cleanup(d[EVTYPE %like% 'SUMMARY',]$EVTYPE)
+
+Here is my clean up policy below as you see in the code.
+
+* Fix everything to upper case
+* Remove all event that contains "summary" in the description
+
+```{r preprocess,echo=TRUE}
+# Upper case and Trim
+d[,c("EVTYPE")] <- cleanup(d$EVTYPE)
+d[,c("PROPDMGEXP")] <- cleanup(d$PROPDMGEXP)
+
+# Remove summary
+d<-d[!(EVTYPE %like% 'SUMMARY'),]
+
+# Remove before 1995
+d<-d[as.Date(d$BGN_DATE,"%m/%d/%Y") >= as.Date("1/1/1996","%m/%d/%Y"),]
+
 ```
 
 ```{r analysis,echo=TRUE}
 colnames(d)
 #PH - Public Health
-#EM - Economic Impact
+#ED - Economic Damage
 # Ranking
-rk<-d[,list(PH=sum(FATALITIES,na.rm=T),EI=sum(PROPDMG,na.rm=T)),by=EVTYPE]
-rk[order(EVTYPE)]$EVTYPE
+rk<-d[,list(PH=sum(FATALITIES,na.rm=T),ED=sum(PROPDMG,na.rm=T)),by=EVTYPE]
+#rk[order(EVTYPE)]$EVTYPE
+pd_rk<-rk[order(PH,decreasing=T),EVTYPE,PH]
+ed_rk<-rk[order(ED,decreasing=T),EVTYPE,ED]
+head(pd_rk,10)
+head(ed_rk,10)
+
+#d[,list(cnt=length(PROPDMGEXP)),by=toupper(PROPDMGEXP)][order(cnt,decreasing=T)]
 ```
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+#Results
 
 
 
