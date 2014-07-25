@@ -63,6 +63,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <pre class="r"><code># http://stackoverflow.com/questions/21511801/text-clustering-with-levenshtein-distances
 setwd(&quot;~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2&quot;)
 # Levenshtein Distance
+if (!file.exists(&quot;types.csv&quot;)){
+  download.file(&quot;https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/notes/class5_repdata/assignment2/types.csv&quot;,&quot;types.csv&quot;,method=&quot;curl&quot;)
+}
 str&lt;-read.csv(&quot;types.csv&quot;)$x
 clnum&lt;-20
 d  &lt;- adist(str)

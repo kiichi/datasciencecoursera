@@ -6,6 +6,10 @@ output: html_document
 ---
 
 ```{r,fig.width=20,fig.height=10}
+
+library(parallel)
+library(stringdist)
+
 # http://stackoverflow.com/questions/21511801/text-clustering-with-levenshtein-distances
 setwd("~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2")
 # Levenshtein Distance
@@ -60,13 +64,14 @@ valid<-c("Astronomical Low Tide",
 "Wildfire",
 "Winter Storm",
 "Winter Weather")
+valid<-toupper(valid)
 str<-read.csv("types.csv")$x
-clnum<-20
-d  <- adist(str)
-rownames(d) <- str
-hc <- hclust(as.dist(d))
-plot(hc,cex=0.2)
-rect.hclust(hc,k=clnum)
-df <- data.frame(str,grp=cutree(hc,k=clnum))
-df
+
+a<-stringdistmatrix(str,valid,method="osa")
+
+checking<-function(test){
+  min_idx<-which.min(a[test,])
+  sprintf("%s v.s. %s (%d)",valid[min_idx],str[test],min(a[test,]))
+}
+sapply(1:length(str),checking)
 ```
