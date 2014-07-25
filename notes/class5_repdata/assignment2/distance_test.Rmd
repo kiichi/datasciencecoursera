@@ -1,0 +1,21 @@
+---
+title: "distance_test.Rmd"
+author: "Kiichi Takeuchi"
+date: "July 25, 2014"
+output: html_document
+---
+
+```{r,fig.width=20,fig.height=10}
+# http://stackoverflow.com/questions/21511801/text-clustering-with-levenshtein-distances
+setwd("~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2")
+# Levenshtein Distance
+str<-read.csv("types.csv")$x
+clnum<-20
+d  <- adist(str)
+rownames(d) <- str
+hc <- hclust(as.dist(d))
+plot(hc,cex=0.2)
+rect.hclust(hc,k=clnum)
+df <- data.frame(str,grp=cutree(hc,k=clnum))
+df
+```

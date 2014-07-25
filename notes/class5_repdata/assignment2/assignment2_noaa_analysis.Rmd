@@ -53,6 +53,20 @@ library(data.table)
 cleanup <- function (x)  {
   toupper(gsub("^\\s+|\\s+$", "", x))
 }
+mult_unit<-function(x,unit){
+  if (unit == "K"){
+    x*1000
+  }
+  else if (unit=="M"){
+    x*1000000
+  }
+  else if (unit=="B"){
+    x*1000000000
+  }
+  else {
+    x
+  }
+}
 ```
 
 ##Loading Data
@@ -66,7 +80,7 @@ Here is my clean up policy below as you see in the code.
 
 * Fix everything to upper case
 * Remove all event that contains "summary" in the description
-
+* Multiply the property damage depend on the unit. Reference (NATIONAL WEATHER SERVICE INSTRUCTION pdf page 12 second paragraph - "Alphabetical characters used to signify magnitude include K for thousands, M for millions, and B for billions."
 ```{r preprocess,echo=TRUE}
 # Upper case and Trim
 d[,c("EVTYPE")] <- cleanup(d$EVTYPE)
@@ -77,6 +91,9 @@ d<-d[!(EVTYPE %like% 'SUMMARY'),]
 
 # Remove before 1995
 d<-d[as.Date(d$BGN_DATE,"%m/%d/%Y") >= as.Date("1/1/1996","%m/%d/%Y"),]
+
+# Apply Unit on Property Damage 
+d[,c("PROPDMG")] <- mult_unit(d$PROPDMG,d$PROPDMG)
 
 ```
 
