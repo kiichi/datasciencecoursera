@@ -7,7 +7,7 @@ output: html_document
 
 #Synopsis
 
-My goal of this report is to analyze impact of various weather events in the U.S in terms of population health and economic damage. I took the data from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, and I am using R as programming language which the details are described below in multiple steps. This document contains the R code itself, results from analysis and instructions for your reproducibile process.
+The goal of this analysis is to find impacts from various weather events in the U.S in terms of public health and economic damage. I took the data from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, and I am using R as programming language which the details are described below in multiple steps. This document contains the R code itself, results from analysis and instructions for your reproducibile process.
 
 #Setup
 First, the work directory path needs to be setup. If you are using R Studio, you can also set it from Session > Set Working Directory > To Source File Location. Here is my example below. 
@@ -17,24 +17,22 @@ setwd("~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2")
 ```
 
 Below is the list of required R packages for this analysis:
-
-* data.table
-* ggplot2
-* R.utils
-* gridExtra
-* ??? ... (add more)
+```{r libinclude,echo=TRUE,results='hide',warning=FALSE,message=FALSE}
+library(data.table)
+library(parallel)
+library(stringdist)
+library(R.utils)
+library(xtable)
+library(ggplot2)
+library(reshape2)
+```
 
 Download and extract the Zip file if it was not extracted yet
 ```{r unzipping,echo=TRUE,results='hide'}
-
-library(R.utils)
 if (!file.exists("storm.bz2")){
   download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2","storm.bz2",method="curl")
 }
 
-if (!file.exists("storm")){
-  bunzip2("storm.bz2")
-}
 ```
 
 As for references, you can take a look at NOAA's documentations.
@@ -45,26 +43,31 @@ As for references, you can take a look at NOAA's documentations.
 
 #Data Processing
 
-Below are steps of loading and processing data.
+Below are steps for data processing.
 
-#Load Library and Utility Functions
+##Utility Functions
+These functions are created for proprocessing phase. cleanup removes white spaces and force characters to uppercase. unit_num function is for mapping unit of damage in dollar amount (K,M and B). More detailed descriptions are available in following section.
 ```{r load_lib,echo=TRUE}
-library(data.table)
+
 cleanup <- function (x)  {
   toupper(gsub("^\\s+|\\s+$", "", x))
 }
-mult_unit<-function(x,unit){
-  if (unit == "K"){
-    x*1000
+
+unit_num<-function(unit){
+  if (is.na(unit)){
+    1
+  }
+  else if (unit == "K"){
+    1000
   }
   else if (unit=="M"){
-    x*1000000
+    1000000
   }
   else if (unit=="B"){
-    x*1000000000
+    1000000000
   }
   else {
-    x
+    1
   }
 }
 ```
@@ -72,7 +75,7 @@ mult_unit<-function(x,unit){
 ##Loading Data
 Next, load the data file. Since I got error with fread function, I'm using read.csv first, then I'm converting into data.table type.
 ```{r loading,echo=TRUE,cache=TRUE}
-d<-data.table(read.csv("storm"))
+d<-data.table(read.csv("storm.bz2"))
 ```
 
 
@@ -80,42 +83,73 @@ Here is my clean up policy below as you see in the code.
 
 * Fix everything to upper case
 * Remove all event that contains "summary" in the description
-* Multiply the property damage depend on the unit. Reference (NATIONAL WEATHER SERVICE INSTRUCTION pdf page 12 second paragraph - "Alphabetical characters used to signify magnitude include K for thousands, M for millions, and B for billions."
-```{r preprocess,echo=TRUE}
-# Upper case and Trim
-d[,c("EVTYPE")] <- cleanup(d$EVTYPE)
-d[,c("PROPDMGEXP")] <- cleanup(d$PROPDMGEXP)
-
-# Remove summary
-d<-d[!(EVTYPE %like% 'SUMMARY'),]
+* Remove if all rows that PROPDMG,CROPDMG,INJURIES and FATALITIES columns are zero
+* Multiply the property / crop damage depend on the unit. Reference (NATIONAL WEATHER SERVICE INSTRUCTION pdf page 12 second paragraph - "Alphabetical characters used to signify magnitude include K for thousands, M for millions, and B for billions."
+```{r preprocess,echo=TRUE,results='hide',cache=TRUE}
 
 # Remove before 1995
 d<-d[as.Date(d$BGN_DATE,"%m/%d/%Y") >= as.Date("1/1/1996","%m/%d/%Y"),]
 
-# Apply Unit on Property Damage 
-d[,c("PROPDMG")] <- mult_unit(d$PROPDMG,d$PROPDMG)
+# Remove if all of PROPDMG,CROPDMG,INJURIES and FATALITIES columns are zero
+d<-d[(PROPDMG+CROPDMG+INJURIES+FATALITIES)>0,]
+
+# Upper case and Trim
+d[,c("EVTYPE")] <- cleanup(d$EVTYPE)
+d[,c("PROPDMGEXP")] <- cleanup(d$PROPDMGEXP)
+d[,c("CROPDMGEXP")] <- cleanup(d$CROPDMGEXP)
+
+# Remove summary
+d<-d[!(EVTYPE %like% 'SUMMARY'),]
+
+d[,c("PHTTL"):=FATALITIES+INJURIES]
+d[,c("PROPDMGMULT")] <- sapply(d$PROPDMGEXP,unit_num)
+d[,c("CROPDMGMULT")] <- sapply(d$CROPDMGEXP,unit_num)
+d[,c("PROPDMG"):=PROPDMG*PROPDMGMULT]
+d[,c("CROPDMG"):=CROPDMG*CROPDMGMULT]
+d[,c("DMGTTL"):=PROPDMG+CROPDMG]
+```
+
+##Ranking: Public Health
+Generate top 10 with following steps:
+1) Group by events 2) Sort and extract top 10 3) Display
+```{r analysis2,echo=TRUE,results='asis'}
+rk_ph<-d[,list(TOTAL=sum(PHTTL),FATALITIES=sum(FATALITIES),INJURIES=sum(INJURIES)),by=EVTYPE]
+rk_ph<-head(rk_ph[order(TOTAL,decreasing=T),],10)
+print(xtable(rk_ph,digits=0),type="html",format.args=list(big.mark = ","))
+```
+.
+```{r plotph, echo=TRUE,fig.width=10,fig.height=5}
+m_ph<-melt(rk_ph[,list(EVTYPE,FATALITIES,INJURIES)], id=c("EVTYPE"))
+ggplot(m_ph,aes(factor(EVTYPE,levels=rk_ph[order(rk_ph$TOTAL),]$EVTYPE),fill=variable,y=value)) + geom_bar(stat="identity") + coord_flip() + labs(title="Public Health",x="Event Type",y="Population Affected by Events")
+```
+
+## Ranking: Economic Damage
+Generate top 10 with following steps:
+1) Group by events 2) Sort and extract top 10 3) Display
+```{r analysis,echo=TRUE,results='asis'}
+rk_ed<-d[,list(TOTAL=sum(DMGTTL),PROPDMG=sum(PROPDMG),CROPDMG=sum(CROPDMG)),by=EVTYPE]
+rk_ed<-head(rk_ed[order(TOTAL,decreasing=T),],10)
+print(xtable(rk_ed,digits=0),type="html",format.args=list(big.mark = ","))
+```
+.
+```{r ploted, echo=TRUE,fig.width=10,fig.height=5}
+m_ed<-melt(rk_ed[,list(EVTYPE,PROPDMG,CROPDMG)], id=c("EVTYPE"))
+ggplot(m_ed,aes(factor(EVTYPE,levels=rk_ed[order(rk_ed$TOTAL),]$EVTYPE),fill=variable,y=value/1000000000.0)) + geom_bar(stat="identity") + coord_flip() + labs(title="Economic Damage",x="Event Type",y="Damage in $ (Billion)")
 
 ```
 
-```{r analysis,echo=TRUE}
-colnames(d)
-#PH - Public Health
-#ED - Economic Damage
-# Ranking
-rk<-d[,list(PH=sum(FATALITIES,na.rm=T),ED=sum(PROPDMG,na.rm=T)),by=EVTYPE]
-#rk[order(EVTYPE)]$EVTYPE
-pd_rk<-rk[order(PH,decreasing=T),EVTYPE,PH]
-ed_rk<-rk[order(ED,decreasing=T),EVTYPE,ED]
-head(pd_rk,10)
-head(ed_rk,10)
 
-#d[,list(cnt=length(PROPDMGEXP)),by=toupper(PROPDMGEXP)][order(cnt,decreasing=T)]
+#Miscellaneous
+
+Generate .md document using knitr library as you need
+```{r gen,echo=TRUE}
+#library(knitr)
+#knit2html("PA1_template.Rmd")
 ```
 
+The published URL is
 
-
-
-#Results
+* http://rpubs.com/kiichi/23256
 
 
 

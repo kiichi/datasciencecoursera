@@ -16,62 +16,15 @@ setwd("~/work/r/class/datasciencecoursera/notes/class5_repdata/assignment2")
 if (!file.exists("types.csv")){
   download.file("https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/notes/class5_repdata/assignment2/types.csv","types.csv",method="curl")
 }
-valid<-c("Astronomical Low Tide",
-"Avalanche",
-"Blizzard",
-"Coastal Flood",
-"Cold/Wind Chill",
-"Debris Flow",
-"Dense Fog",
-"Dense Smoke",
-"Drought",
-"Dust Devil",
-"Dust Storm",
-"Excessive Heat",
-"Extreme Cold/Wind Chill",
-"Flash Flood",
-"Flood",
-"Frost/Freeze",
-"Funnel Cloud",
-"Freezing Fog",
-"Hail",
-"Heat",
-"Heavy Rain",
-"Heavy Snow",
-"High Surf",
-"High Wind",
-"Hurricane (Typhoon)",
-"Ice Storm",
-"Lake-Effect Snow",
-"Lakeshore Flood",
-"Lightning",
-"Marine Hail",
-"Marine High Wind",
-"Marine Strong Wind",
-"Marine Thunderstorm Wind",
-"Rip Current",
-"Seiche",
-"Sleet",
-"Storm Surge/Tide",
-"Strong Wind",
-"Thunderstorm Wind",
-"Tornado",
-"Tropical Depression",
-"Tropical Storm",
-"Tsunami",
-"Volcanic Ash",
-"Waterspout",
-"Wildfire",
-"Winter Storm",
-"Winter Weather")
-valid<-toupper(valid)
-str<-read.csv("types.csv")$x
-
+valid<-read.csv("valid.csv")$x
+str<-toupper(gsub("^\\s+|\\s+$", "", read.csv("types.csv")$x))
+#str<-toupper(gsub("^\\s+|\\s+|\\(.*\\)$", "", read.csv("types.csv")$x))
+#c("osa", "lv", "dl", "hamming", "lcs", "qgram", "cosine", "jaccard", "jw")
 a<-stringdistmatrix(str,valid,method="osa")
 
 checking<-function(test){
   min_idx<-which.min(a[test,])
-  sprintf("%s v.s. %s (%d)",valid[min_idx],str[test],min(a[test,]))
+  sprintf("%s v.s. %s (dist=%d)",valid[min_idx],str[test],min(a[test,]))
 }
 sapply(1:length(str),checking)
 ```
