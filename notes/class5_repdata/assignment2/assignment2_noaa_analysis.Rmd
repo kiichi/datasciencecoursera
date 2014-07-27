@@ -7,7 +7,9 @@ output: html_document
 
 #Synopsis
 
-The goal of this analysis is to find impacts from various weather events in the U.S in terms of public health and economic damage. I took the data from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, and I am using R as programming language which the details are described below in multiple steps. This document contains the R code itself, results from analysis and instructions for your reproducibile process.
+The goal of the analysis is to find impacts from various weather events in the U.S in terms of public health and economic damage. The data set was imported from the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database, and details are described below in multiple steps.
+
+The result of the analysis shows tornado is the most critical event which affects the number of fatalities and injuries. The property and crop damage anaysis indicates flood is the largest impact. I also would like to draw your attention to the excessive heat because higher fatality rate than injury. Within the same analysis, drought is only the one that contains larger crop damage than property one.
 
 #Setup
 First, the work directory path needs to be setup. If you are using R Studio, you can also set it from Session > Set Working Directory > To Source File Location. Here is my example below. 
@@ -32,10 +34,12 @@ Download and extract the Zip file if it was not extracted yet
 if (!file.exists("storm.bz2")){
   download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2","storm.bz2",method="curl")
 }
-
+if (!file.exists("types.csv")){
+  download.file("https://raw.githubusercontent.com/kiichi/datasciencecoursera/master/notes/class5_repdata/assignment2/valid.csv","valid.csv",method="curl")
+}
 ```
 
-As for references, you can take a look at NOAA's documentations.
+Note: NOAA's documentations are here
 
 * https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf
 * https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf
@@ -43,14 +47,20 @@ As for references, you can take a look at NOAA's documentations.
 
 #Data Processing
 
-Below are steps for data processing.
+In this section, data processing steps are presented.
 
-##Utility Functions
+###Loading Data
+Next, load the data file. Since I got error with fread function, I'm using read.csv first, then I'm converting into data.table type.
+```{r loading,echo=TRUE,cache=TRUE}
+d<-data.table(read.csv("storm.bz2"))
+```
+
+###Utility Functions
 These functions are created for proprocessing phase. cleanup removes white spaces and force characters to uppercase. unit_num function is for mapping unit of damage in dollar amount (K,M and B). More detailed descriptions are available in following section.
 ```{r load_lib,echo=TRUE}
 
 cleanup <- function (x)  {
-  toupper(gsub("^\\s+|\\s+$", "", x))
+  toupper(gsub("^\\s+|\\s+$", "",gsub("\\(.+","",x)))
 }
 
 unit_num<-function(unit){
@@ -70,19 +80,18 @@ unit_num<-function(unit){
     1
   }
 }
+
 ```
 
-##Loading Data
-Next, load the data file. Since I got error with fread function, I'm using read.csv first, then I'm converting into data.table type.
-```{r loading,echo=TRUE,cache=TRUE}
-d<-data.table(read.csv("storm.bz2"))
-```
+###Processing Data
 
 
 Here is my clean up policy below as you see in the code.
 
 * Fix everything to upper case
 * Remove all event that contains "summary" in the description
+* Remove after parenthesis
+* Correct similar event name using valid event names (see valid.csv from above pdf reference)
 * Remove if all rows that PROPDMG,CROPDMG,INJURIES and FATALITIES columns are zero
 * Multiply the property / crop damage depend on the unit. Reference (NATIONAL WEATHER SERVICE INSTRUCTION pdf page 12 second paragraph - "Alphabetical characters used to signify magnitude include K for thousands, M for millions, and B for billions."
 ```{r preprocess,echo=TRUE,results='hide',cache=TRUE}
@@ -100,7 +109,48 @@ d[,c("CROPDMGEXP")] <- cleanup(d$CROPDMGEXP)
 
 # Remove summary
 d<-d[!(EVTYPE %like% 'SUMMARY'),]
+```
 
+Load valid event names, and find simlar words that needs to be corrected. I'm using osa for string distance calculation, and the threthshold is 1. If the distance is more than 1, the logic keeps original event name. In this way, I'm expecting to detect differences of singular v.s. prulal, hyphen, etc...
+```{r, replacevalid,echo=TRUE,cache=TRUE}
+uni<-unique(d$EVTYPE)
+valid<-cleanup(read.csv("valid.csv")$x)
+
+find_word<-function(original){
+  dst<-stringdist(original,valid)
+  if (min(dst)>=2){
+    original
+  }
+  else {
+    valid[which.min(dst)]
+  }
+}
+
+#Build translation table
+trn<-data.table(original=uni)
+trn[,c("translated")]<-sapply(uni,find_word)
+trn<-trn[original!=translated,]
+```
+By processing distances between valid event type dictionary and data file's original event types, I found following list of similar words.
+```{r, replacevalid,echo=TRUE,cache=TRUE}
+trn
+
+replace_event<-function(event_type){
+  if (any(trn$original==event_type)){
+    trn[original==event_type,translated]
+  }
+  else {
+    event_type
+  }
+}
+
+d[,c("EVTYPE")]<-sapply(d$EVTYPE,replace_event)
+# Unique Number of Events in the dataset
+length(unique(d$EVTYPE))
+```
+
+Finally, we are going to calculate total number of fatalities, injuries, economic damage which are from property damage and crop damage.
+```{r preprocess2,echo=TRUE,results='hide',cache=TRUE}
 d[,c("PHTTL"):=FATALITIES+INJURIES]
 d[,c("PROPDMGMULT")] <- sapply(d$PROPDMGEXP,unit_num)
 d[,c("CROPDMGMULT")] <- sapply(d$CROPDMGEXP,unit_num)
@@ -109,7 +159,11 @@ d[,c("CROPDMG"):=CROPDMG*CROPDMGMULT]
 d[,c("DMGTTL"):=PROPDMG+CROPDMG]
 ```
 
-##Ranking: Public Health
+#Results
+
+Results of processed data are presented below.
+
+###Ranking: Public Health
 Generate top 10 with following steps:
 1) Group by events 2) Sort and extract top 10 3) Display
 ```{r analysis2,echo=TRUE,results='asis'}
@@ -123,7 +177,7 @@ m_ph<-melt(rk_ph[,list(EVTYPE,FATALITIES,INJURIES)], id=c("EVTYPE"))
 ggplot(m_ph,aes(factor(EVTYPE,levels=rk_ph[order(rk_ph$TOTAL),]$EVTYPE),fill=variable,y=value)) + geom_bar(stat="identity") + coord_flip() + labs(title="Public Health",x="Event Type",y="Population Affected by Events")
 ```
 
-## Ranking: Economic Damage
+### Ranking: Economic Damage
 Generate top 10 with following steps:
 1) Group by events 2) Sort and extract top 10 3) Display
 ```{r analysis,echo=TRUE,results='asis'}
@@ -144,12 +198,14 @@ ggplot(m_ed,aes(factor(EVTYPE,levels=rk_ed[order(rk_ed$TOTAL),]$EVTYPE),fill=var
 Generate .md document using knitr library as you need
 ```{r gen,echo=TRUE}
 #library(knitr)
-#knit2html("PA1_template.Rmd")
+#knit2html("assignment2_noaa_analysis.Rmd")
 ```
 
 The published URL is
 
 * http://rpubs.com/kiichi/23256
 
+Github URL
 
+* https://github.com/kiichi/datasciencecoursera/tree/master/notes/class5_repdata/assignment2
 
