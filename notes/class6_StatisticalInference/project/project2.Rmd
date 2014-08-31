@@ -1,0 +1,35 @@
+###Project #2 : Tooth Growth Analysis
+####1.Load the ToothGrowth data and perform some basic exploratory data analyses 
+```{r,fig.height=3}
+library(ggplot2)
+data(ToothGrowth)
+str(ToothGrowth)
+vc<-ToothGrowth[ToothGrowth$supp=='VC',]#summary(vc)
+oj<-ToothGrowth[ToothGrowth$supp=='OJ',]#summary(oj)
+ggplot(ToothGrowth, aes(x=dose, y=len, color=supp)) +
+  geom_point() +
+  geom_smooth(method=lm)  
+```
+
+####2.Provide a basic summary of the data.
+The dataset, ToothGrowth contains 3 variables that show growth of teeth by giving different type of supplements (OJ or VC). Each type contains 30 observations with different doses 0.5, 1.0 and 2.0. The mean growth from OJ data is 16.5 while VC data shows 20.7.
+
+####3. Use confidence intervals and hypothesis tests to compare tooth growth by supp and dose. (Use the techniques from class even if there’s other approaches worth considering)
+
+```{r}
+r1<-t.test(oj[oj$dose==0.5,]$len,vc[vc$dose==0.5,]$len,paired=F)
+r1$conf.int
+r1$p.value
+r2<-t.test(oj[oj$dose==1.0,]$len,vc[vc$dose==1.0,]$len,paired=F)
+r2$conf.int
+r2$p.value
+r3<-t.test(oj[oj$dose==2.0,]$len,vc[vc$dose==2.0,]$len,paired=F)
+r3$conf.int
+r3$p.value
+```
+* 0.5 Dose: 1.719 8.781 (p-value=0.006359) - Significant diffence 
+* 1.0 Dose: 2.802 9.058 (p-value=0.001038) - Significant diffence 
+* 2.0 Dose: -3.798  3.638 (p-value=0.9639) - NO Significant diffence (contains 0)
+
+####4. State your conclusions and the assumptions needed for your conclusions.
+Regardless the suppliment type (OJ or VC), the dose makes significant difference for 0.5 and 1.0 while the larger dose 2.0 did not seem to affect the difference.

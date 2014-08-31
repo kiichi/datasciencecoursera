@@ -1,0 +1,55 @@
+---
+title: 'Simulated Exponential Distribution '
+author: "Kiichi Takeuchi"
+date: "August 22, 2014"
+output: html_document
+---
+
+#### 1. Show where the distribution is centered at and compare it to the theoretical center of the distribution.
+```{r}
+library(ggplot2)
+t<-1000 #number of simulation
+n<-40   #number of samples
+l<-0.2  #lambda
+ctr<-1/l #theoretical center
+#simulatated results
+simdata<-sapply(1:t,function(x){
+  mean(rexp(n,l))
+})
+```
+Mean, Standard Deviation and variance of simulated data
+```{r}
+c(mean(simdata),sd(simdata),var(simdata))
+```
+Mean is close enough to the center of distribution 5.
+####2.Show how variable it is and compare it to the theoretical variance of the distribution.
+Theoretical Standard Deviation and Variance
+```{r}
+(1/l)/sqrt(n)
+((1/l)/sqrt(n))^2
+```
+#### 3. Show that the distribution is approximately normal. 
+Include both results: exponential distribution and normal distribution
+```{r}
+normal<-rnorm(t,mean=ctr,sd=ctr/sqrt(n))
+data<-c(simdata,normal)
+type<-as.factor(c(rep('simulation', length(simdata)), rep('normal', length(normal))))
+df<-data.frame(val=data,type=type)
+```
+Draw Simulated Distribution and Normal Distribution
+```{r,fig.width=10}
+ggplot(df,aes(x=val,fill=type)) + 
+  geom_histogram(aes(y=..density..),binwidth=.1,colour="black", fill="white") +
+  geom_density(alpha=.2) +
+  geom_vline(aes(xintercept=ctr),color="red",linetype="solid", size=1) +
+  geom_vline(aes(xintercept=mean(data, na.rm=T)),color="blue",linetype="solid", size=1) +
+  scale_x_continuous(breaks = 1:10) +
+  scale_y_continuous(name = "Density")
+```
+Both simulated and theoretical diestribution are shown in green and red. The mean of simulaterd mean is presented vertical blue line while the theoretical mean should be in red line and they are very close each other.
+
+####4.Evaluate the coverage of the confidence interval for 1/lambda: X¯±1.96Sn√. (This only needs to be done for the specific value of lambda). 
+```{r}
+intervals<-mean(data) + c(-1,1) * 1.96 * sd(data)/sqrt(n)
+intervals
+```

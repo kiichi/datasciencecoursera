@@ -1,0 +1,48 @@
+---
+title: "Week2"
+author: "Kiichi Takeuchi"
+date: "August 16, 2014"
+output: html_document
+---
+
+#Confidence Intervals
+
+```{r}
+library(UsingR)
+data(father.son)
+x <- father.son$sheight
+mean(x) # X bar - average 68.68
+sd(x) # Mu - 2.815
+length(x) # n - 1078
+
+#What is the Confidence interval of 95%
+(mean(x) + c(-1, 1) * qnorm(0.95) * sd(x)/sqrt(length(x)))
+```
+
+
+100 sample vote, 56 for you. Confidence Interval?
+
+```{r}
+binom.test(56,100)$conf.int
+```
+
+5 failure out of 94.32 days. What is 95% confidence interval per day?
+
+```{r}
+poisson.test(5,94.32)$conf.int
+```
+
+
+
+10 fails per minutes. What is 95% confidence interval for one hour?
+
+```{r}
+poisson.test(10*60,60)$conf.int
+```
+
+```{r}
+#Q4
+qnorm(0.95, mean=1100, sd=75/10)
+#Q5
+pbinom(3,prob=0.5,size=5,lower.tail=F)
+```
