@@ -1,0 +1,143 @@
+---
+title: "Quiz3"
+author: "Kiichi Takeuchi"
+date: "September 19, 2014"
+output:
+  html_document:
+    theme: united
+    toc: yes
+---
+
+
+```{r,include=FALSE}
+library(UsingR)
+data(mtcars)
+```
+
+###Q1
+
+Consider the mtcars data set. Fit a model with mpg as the outcome that includes number of cylinders as a factor variable and weight as confounder. Give the adjusted estimate for the expected change in mpg comparing 8 cylinders to 4.
+
+```{r}
+#summary(lm(mpg~cyl+wt,data=mtcars))
+fit<-lm(mpg~I(as.factor(cyl))+wt-1,data=mtcars)
+fit
+fit<-lm(mpg~I(as.factor(cyl))-1,data=mtcars)
+fit
+fit<-lm(mpg~
+          I(1 * (cyl==4) )
+         +I(1 * (cyl==8) )
+         +wt
+        ,data=mtcars)
+fit
+fit<-lm(mpg~
+          I(1 * (cyl==4) )
+         +I(1 * (cyl==8) )         
+        ,data=mtcars)
+fit
+
+plot(mtcars[mtcars$cyl==4,]$wt,mtcars[mtcars$cyl==4,]$mpg,col="red",xlim=c(0,5),ylim=c(10,40))
+fit1<-lm(mtcars[mtcars$cyl==4,]$mpg~mtcars[mtcars$cyl==4,]$wt)
+abline(fit1,col="red")
+fit1
+points(mtcars[mtcars$cyl==8,]$wt,mtcars[mtcars$cyl==8,]$mpg,col="blue")
+fit2<-lm(mtcars[mtcars$cyl==8,]$mpg~mtcars[mtcars$cyl==8,]$wt)
+abline(fit2,col="blue")
+fit2
+#fit0<-lm(mpg~wt,data=mtcars)
+#abline(fit0,col="green")
+```
+
+###Q2
+
+Compare the adjusted by weight effect of 8 cylinders as compared to 4 the unadjusted. What can be said about the effect?.
+
+```
+With Wt: 8->4 diff is 6.07
+Without Wt: 8->4 diff 11.56
+```
+
+###Q3
+
+Fit a model with mpg as the outcome that considers number of cylinders as a factor variable and weight as confounder. Now fit a second model with mpg as the outcome model that considers the interaction between number of cylinders (as a factor variable) and weight. Give the P-value for the likelihood ratio test comparing the two models and suggest a model using 0.05 as a type I error rate significance benchmark.
+
+
+```{r}
+# as counfounder (as another varaiable)
+fit1<-lm(mpg ~ factor(cyl) + wt, mtcars)
+#same (expands like this)
+#lm(mpg ~ factor(cyl) + wt + factor(cyl) : wt, mtcars)
+summary(fit1)$coef
+
+#star means interaction
+fit2<-lm(mpg ~ factor(cyl) * wt, mtcars)
+summary(fit2)$coef
+
+anova(fit1,fit2)
+``` 
+Model #2 with interaction of weight is not significant; that is, we failed reject null hypthosis since p-value is 0.12 > 0.05.
+
+
+ 
+###Q4
+
+Fit a model with mpg as the outcome that includes number of cylinders as a factor variable and weight inlcuded in the model as
+
+```{r}
+fit<-lm(mpg ~ I(wt * 0.5) + factor(cyl), data = mtcars)
+summary(fit)$coef
+
+plot(mtcars$wt,mtcars$mpg)
+abline(fit,col="red")
+abline(lm(mpg ~ I(wt * 0.6) + factor(cyl), data = mtcars),col="blue")
+abline(lm(mpg ~ I(wt * 0.7) + factor(cyl), data = mtcars),col="green")
+abline(lm(mpg ~ I(wt * 0.8) + factor(cyl), data = mtcars),col="lightblue")
+abline(lm(mpg ~ I(wt * 0.9) + factor(cyl), data = mtcars),col="gray")
+abline(lm(mpg ~ I(wt * 1.0) + factor(cyl), data = mtcars),col="purple")
+```
+
+
+###Q5
+
+Give the hat diagonal for the most influential point
+
+See Video 02_04_c Residuals and diagnostics examples 6:32
+
+```{r}
+x <- c(0.586, 0.166, -0.042, -0.614, 11.72)
+y <- c(0.549, -0.026, -0.127, -0.751, 1.344)
+fit<-lm(y~x)
+
+hatvalues(fit)
+
+plot(x,y,xlim=c(-1,13))
+abline(fit,col="red")
+text(x, y,sprintf("(%s,%s)",x,y), cex=0.6, pos=4, col="brown")
+```
+
+
+
+###Q6
+
+Give the slope dfbeta for the point with the highest hat value.
+
+Note: dfbetas shows values if you take out the data, how much the impact would be?
+
+hatvalues is potential infulence within the dataset
+
+See Video 02_04_c Residuals and diagnostics examples 6:32
+
+```{r}
+dfbetas(fit)
+```
+
+
+###Q7
+
+Consider a regression relationship between Y and X with and without adjustment for a third variable Z. Which of the following is true about comparing the regression coefficient between Y and X with and without adjustment for Z.
+
+
+```{r}
+```
+
+

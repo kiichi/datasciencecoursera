@@ -1,0 +1,147 @@
+---
+title: "quiz1"
+author: "Kiichi Takeuchi"
+date: "September 6, 2014"
+output: html_document
+---
+
+http://rpubs.com/kiichi/27763
+
+###Q1
+
+```{r}
+x <- c(0.18, -1.54, 0.42, 0.95)
+w <- c(2, 1, 3, 1)
+plot(x,w)
+#sum((wi - xi)^2) ... from zero to n
+mu<-c(0.0025,1.077,0.1471,0.300)
+mu
+sapply(mu,function(muval){
+  sum(w*(x-muval)^2)  
+})
+
+```
+
+
+###Q2
+
+y is outcome
+x is predictor
+
+```{r}
+x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
+y <- c(1.39, 0.72, 1.55, 0.48, 1.19, -1.59, 1.23, -0.65, 1.49, 0.05)
+coef(lm(y~x-1))
+```
+Fit line through the origin. Use -1 in the lm function
+```{r}
+plot(x,y,xlim=c(-2,2),ylim=c(-2,4))
+abline(lm(y~x-1),col='red')
+abline(h=0,col="gray")
+abline(v=0,col="gray")
+```
+
+mpg as the outcome and weight as the predictor
+```{r}
+data(mtcars)
+coef(lm(mtcars$mpg~mtcars$wt))
+
+plot(mtcars$wt,mtcars$mpg)
+abline(lm(mtcars$mpg~mtcars$wt),col="red")
+```
+
+
+###Q4
+Consider data with an outcome (Y) and a predictor (X). The standard deviation of the predictor is one half that of the outcome. The correlation between the two variables is .5. What value would the slope coefficient for the regression model with Y as the outcome and X as the predictor?
+
+B1=Cor(Y,X)*Sd(Y)/Sd(X)
+Sd(X) is one half of Sd(Y)
+Let Sd(Y) = 1
+Sd(X) = 0.5
+Cor(Y,X) = 0.5
+B1=0.5*1/0.5
+
+###Q5
+
+Students were given two hard tests and scores were normalized to have empirical mean 0 and variance 1. The correlation between the scores on the two tests was 0.4. What would be the expected score on Quiz 2 for a student who had a normalized score of 1.5 on Quiz 1?
+
+mean 0 and variance 1 will indicate the line goes through the origin (0,0)
+
+Corr(Y,X)=0.4 (correlationship of coefficient)
+
+
+if x is 1.5 , then y?
+
+```{r}
+1.5*0.4
+```
+
+
+###Q6
+
+Normalize this.
+
+(actual_val_X - mean(x)) / StdDev(x)
+
+```{r}
+x <- c(8.58, 10.46, 9.01, 9.64, 8.86)
+xc<-(x-mean(x))/sd(x)
+xc
+```
+
+###Q7
+* x - predictor
+* y - outcome
+```{r}
+x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
+y <- c(1.39, 0.72, 1.55, 0.48, 1.19, -1.59, 1.23, -0.65, 1.49, 0.05)
+coef(lm(y~x))
+plot(x,y,xlim=c(-2,2),ylim=c(-2,2))
+abline(lm(y~x),col="red")
+abline(h=0,col="gray")
+abline(v=0,col="gray")
+
+#centerilize and normalize
+xc<-(x-mean(x))/sd(x)
+yc<-(y-mean(y))/sd(y)
+plot(xc,yc,ylim=c(-2,2),xlim=c(-2,2))
+abline(lm(yc~xc),col="blue")
+abline(h=0,col="gray")
+abline(v=0,col="gray")
+```
+
+###Q8
+
+```{r}
+x<-c(-4,-2,2,4)
+mean(x)
+y<-c(-6,-1,3,4)
+mean(y)
+coef(lm(y~x))
+```
+
+###Q9
+
+What value minimizes the sum of the squared distances between these points and itself?
+
+```{r}
+
+x <- c(0.8, 0.47, 0.51, 0.73, 0.36, 0.58, 0.57, 0.85, 0.44, 0.42)
+mu<-c(0.573,0.8,0.36,0.44)
+mu
+sapply(mu,function(mu){
+  sum( (x-mu)^2 )
+})
+```
+
+###Q10
+
+Consider taking the slope having fit Y as the outcome and X as the predictor, β1 and the slope from fitting X as the outcome and Y as the predictor, γ1, and dividing the two as β1/γ1. What is this ratio always equal to?
+
+```{r}
+x<-mtcars$wt
+y<-mtcars$mpg
+coef(lm(y~x))[2]/coef(lm(x~y))[2]
+
+var(y)/var(x)
+```

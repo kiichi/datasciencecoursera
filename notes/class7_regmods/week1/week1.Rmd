@@ -1,0 +1,194 @@
+---
+title: "Regression Model"
+author: "Kiichi Takeuchi"
+date: "September 5, 2014"
+output: html_document
+---
+
+RPub URL: 
+http://rpubs.com/kiichi/27744
+
+
+https://github.com/DataScienceSpecialization/courses
+https://github.com/DataScienceSpecialization/courses/blob/master/07_RegressionModels%2F01_01_introduction%2Findex.md
+
+https://class.coursera.org/regmods-006/wiki/Lecture_note_links
+
+```{r,echo=FALSE,include=FALSE}
+library(UsingR);
+data(galton);
+```
+```{r,fig.height=4}
+par(mfrow=c(1,2))
+hist(galton$child,col="blue",breaks=100);
+hist(galton$parent,col="blue",breaks=100);
+```
+
+What is the "center of the mass"? , means where can you put your finger to balance the graph?
+
+Minimize the distance from all other points. 
+
+```
+sum((Child - Parent)^2) from ... from zero to n
+```
+
+Least Square!
+
+###Plotting and Manipulating
+copy paste this
+
+```
+library(manipulate)
+library(ggplot2)
+myHist <- function(mu){
+    mse <- mean((galton$child - mu)^2)
+    g <- ggplot(galton, aes(x = child)) + geom_histogram(fill = "salmon", colour = "black", binwidth=1)
+    g <- g + geom_vline(xintercept = mu, size = 3)
+    g <- g + ggtitle(paste("mu = ", mu, ", MSE (Mean Sq Err) = ", round(mse, 2), sep = ""))
+    g
+}
+manipulate(myHist(mu), mu = slider(62, 74, step = 0.5))
+```
+
+###Comparing
+
+```{r}
+plot(galton$parent,galton$child,pch=19)
+```
+
+```{r}
+freqData <- as.data.frame(table(galton$child, galton$parent))
+names(freqData) <- c("child", "parent", "freq")
+plot(as.numeric(as.vector(freqData$parent)), 
+     as.numeric(as.vector(freqData$child)),
+     pch = 21, col = "black", bg = "lightblue",
+     cex = .15 * freqData$freq, 
+     xlab = "parent", ylab = "child")
+```
+
+###Fit - Regression from the origin
+Approach.
+
+think of a line y=xb. Give xi value and try to minimize the difference : yi-y
+
+"Actual Y - Predicted Line's Y ?"
+
+```{r freqGalton, dependson="galton",fig.height=6,fig.width=6,echo=FALSE}
+freqData <- as.data.frame(table(galton$child, galton$parent))
+names(freqData) <- c("child", "parent", "freq")
+plot(as.numeric(as.vector(freqData$parent)), 
+     as.numeric(as.vector(freqData$child)),
+     pch = 21, col = "black", bg = "lightblue",
+     cex = .05 * freqData$freq, 
+     xlab = "parent", ylab = "child")
+lm1 <- lm(galton$child ~ galton$parent)
+lines(galton$parent,lm1$fitted,col="red",lwd=3)
+```
+
+
+
+Play with beta. copy paste this.
+
+```
+myPlot <- function(beta){
+  y <- galton$child - mean(galton$child)
+  x <- galton$parent - mean(galton$parent)
+  freqData <- as.data.frame(table(x, y))
+  names(freqData) <- c("child", "parent", "freq")
+  plot(
+    as.numeric(as.vector(freqData$parent)), 
+    as.numeric(as.vector(freqData$child)),
+    pch = 21, col = "black", bg = "lightblue",
+    cex = .15 * freqData$freq, 
+    xlab = "parent", 
+    ylab = "child"
+    )
+  abline(0, beta, lwd = 3)
+  points(0, 0, cex = 2, pch = 19)
+  mse <- mean( (y - beta * x)^2 )
+  title(paste("beta = ", beta, "mse = ", round(mse, 3)))
+}
+manipulate(myPlot(beta), beta = slider(0.6, 1.2, step = 0.02))
+```
+###Linear Least Sq Calculation
+
+```
+Y=B0+B1X
+
+B1=Cor(Y,X)*Sd(Y)/Sd(X)
+B0=Ybar-B1*Xbar
+```
+
+```{r}
+data(father.son)
+x<-father.son$fheight
+y<-father.son$sheight
+
+#x<-galton$child
+#y<-galton$parent
+
+b1<-cor(y,x)*sd(y)/sd(x)
+b0<-mean(y)-b1*mean(x)
+c(b0,b1)
+```
+
+Is this same from lm function? Verify
+```{r}
+coef(lm(y~x))
+```
+
+Outcome v.s. Predictor Relation ship
+```{r}
+b1<-cor(y,x)*sd(x)/sd(y)
+b0<-mean(x)-b1*mean(y)
+c(b0,b1)
+```
+
+Is this same as this?
+```{r}
+coef(lm(x~y))
+```
+Regression via origin
+
+```{r}
+yc<-y-mean(y)
+xc<-x-mean(x)
+b1<-sum(yc*xc)/sum(xc^2)
+b1
+```
+Is this same as this?
+
+```{r}
+coef(lm(y~x))[2]
+```
+
+###Normalizing and Correlation
+
+```{r,fig.height=8,fig.width=8}
+
+rho <- cor(xc,yc)
+rho
+plot(xc,yc,xlab='Father (normalized)',ylab='Son (normalized)')
+
+#Identity Line = Perfect Correlation!
+abline(0,1,col="blue",lwd=3)
+
+# Father predicts son: If Father is tall, son tends to be tall but not as tall as the father.
+abline(0,rho,col="green",lwd=3)
+
+# Son predicts father: If Son is tall, father tends to be tall but not as tall as the son.
+abline(0,1/rho,col="red",lwd=3)
+
+#No relationship
+abline(h=0,col="gray",lwd=1)
+abline(v=0,col="gray",lwd=1)
+
+```
+
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+---
+title: "note3"
+author: "Kiichi Takeuchi"
+date: "September 19, 2014"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+
+```{r,include=FALSE}
+library(UsingR)
+data(mtcars)
+```
+
+
+```
+[, 1]    mpg   Miles/(US) gallon
+[, 2]   cyl   Number of cylinders
+[, 3]	 disp	 Displacement (cu.in.)
+[, 4]	 hp	 Gross horsepower
+[, 5]	 drat	 Rear axle ratio
+[, 6]	 wt	 Weight (lb/1000)
+[, 7]	 qsec	 1/4 mile time
+[, 8]	 vs	 V/S
+[, 9]	 am	 Transmission (0 = automatic, 1 = manual)
+[,10]	 gear	 Number of forward gears
+[,11]	 carb	 Number of carburetors
+```
+
+If we treat cyl (or am) as a factor, R includes an intercept and omits the alphabetically first level of the factor.
+
+```{r}
+#Factorize those columns
+mtcars2<-transform(mtcars, cyl = as.factor(cyl))
+mtcars2<-transform(mtcars2, am = as.factor(am))
+
+#same
+#summary(lm(mpg ~ I(1 * (am==0)) + I(1 * (am==1)), data=mtcars2))$coef
+summary(lm(mpg ~ am, data=mtcars2))$coef
+summary(lm(mpg ~ am - 1, data=mtcars2))$coef
+summary(lm(mpg ~ cyl, data=mtcars2))$coef
+summary(lm(mpg ~ cyl - 1, data=mtcars2))$coef
+```
+
+
+
+
+
+
+
+```
+lm(formula = Fertility ~ ., data = swiss)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-15.2743  -5.2617   0.5032   4.1198  15.3213 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(>|t|)    
+(Intercept)      66.91518   10.70604   6.250 1.91e-07 ***
+Agriculture      -0.17211    0.07030  -2.448  0.01873 *  
+Examination      -0.25801    0.25388  -1.016  0.31546    
+Education        -0.87094    0.18303  -4.758 2.43e-05 ***
+Catholic          0.10412    0.03526   2.953  0.00519 ** 
+Infant.Mortality  1.07705    0.38172   2.822  0.00734 ** 
+
+| Recall that the Estimates are the coeffients of the independent variables of the linear model (all
+| of which are percentages) and they reflect an estimated change in the dependent variable
+| (fertility) when the corresponding independent variable changes. So, for every 1% increase in
+| percent of males involved in agriculture as an occupation we expect a .17 decrease in fertility,
+| holding all the other variables constant; for every 1% increase in Catholicism, we expect a .10
+| increase in fertility, holding all other variables constan
+
+What does estimate indicate? It's estimate of the first variable's mean from other groups.
+Therefore, mean(swiss$Fertility) -0.17211 is mean(swiss$Agriculture)
+
+-1 in formula indicates no intercept, that is, it shows exact mean of each variables
+lm(Fertility~Agriculture-1)
+
+plot(fit) is useful to find out outlier in Residuals vs Fitted. If you find some data that messes up the trend, the redline jumps from the trend. The trend should go through somewhere in the middle. This is also same thing when you call dfbeta(fit). You can examine each point one by one.
+This is called hat value, influence or leverage.
+```

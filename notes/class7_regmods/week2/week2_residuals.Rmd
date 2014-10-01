@@ -1,0 +1,370 @@
+---
+title: "Linear Regression"
+output:
+  html_document:
+    toc: true
+    theme: united
+---
+
+RPub URL:
+
+http://rpubs.com/kiichi/28414
+
+###Model
+
+```
+Y=b0+b1Xi+Ei ... where Ei are iid N(0,σ2)
+
+b1=Cor(Y,X) * (Sd(Y)/Sd(X))
+b0=Y−b1X
+```
+
+###Sample Data 
+
+```
+library(UsingR)
+data(mtcars)
+```
+
+```{r,include=FALSE}
+library(UsingR)
+data(mtcars)
+```
+
+```
+[, 1]    mpg   Miles/(US) gallon
+[, 2]	 cyl	 Number of cylinders
+[, 3]	 disp	 Displacement (cu.in.)
+[, 4]	 hp	 Gross horsepower
+[, 5]	 drat	 Rear axle ratio
+[, 6]	 wt	 Weight (lb/1000)
+[, 7]	 qsec	 1/4 mile time
+[, 8]	 vs	 V/S
+[, 9]	 am	 Transmission (0 = automatic, 1 = manual)
+[,10]	 gear	 Number of forward gears
+[,11]	 carb	 Number of carburetors
+```
+
+###Single Variable Linear Regression Model
+
+Interpreting Data
+
+```{r}
+x<-mtcars$wt
+y<-mtcars$mpg
+fit<-lm(y ~ x)
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+abline(fit,col="red")
+```
+
+Let's look at slope and intercept
+
+```{r}
+coef(fit)
+```
+
+This means, **"For every 1000lb weight increases, MPG decreases by 5.3 miles per gallon"** and **"If there is 0lb car, the MPG is 37.2 miles per gallon"**
+
+###Centering and Scaling 
+
+How about if we need to scale / convert the unit of weight in Kg instead of lb? One way is to convert everything before applying lm() function.
+
+```
+# 1lb is 0.45kg
+x<-mtcars$wg * 0.45
+```
+or, use I() function to scale within formula
+
+```{r}
+fit2<-lm(y~I(x*0.45))
+coef(fit2)
+
+plot(x*0.45,y,xlab='Weight (1000Kg)',ylab='MPG')
+abline(fit2,col="red")
+```
+
+This means, **"For every 1000kg weight increases, MPG decreases by -11.88 miles per gallon"**.
+
+
+In same way, you can apply centering on the formula itself. Center and scale them with the standard deviation.
+
+```{r}
+fit3<-lm( I( (y - mean(y))/sd(y) ) ~ I( (x - mean(x))/sd(x) ) )
+coef(fit3)
+plot((x - mean(x))/sd(x),(y - mean(y))/sd(y))
+abline(fit3,col="red")
+abline(h=0,col="gray")
+abline(v=0,col="gray")
+```
+
+
+###Prediction
+
+Use predict() function. You can also calculate the values from slope and intercept from coef() function.
+
+```{r}
+est<-predict(fit,data.frame(x))
+
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+abline(fit,col="red")
+points(x,est,col="blue",pch=3)
+```
+
+###Drawing Prediction Interval Lines
+
+Prediction Interval
+```{r}
+p2<-predict(fit,data.frame(x), interval="prediction")
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+abline(fit,col="red")
+lines(x,p2[,2],col="lightblue")
+lines(x,p2[,3],col="lightblue")
+```
+
+
+###Residuals
+
+Use resid() function.
+
+```{r}
+est<-predict(fit,newdata=data.frame(x))
+err<-resid(fit)
+```
+
+Both should match:
+
+- Gap between estimated value and real values (y-est)
+- Residuals (err)
+
+```{r}
+head(y-est)
+head(err)
+```
+
+Draw the residuals in green bar
+```{r}
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+segments(x,y,x,est, col="darkgreen", lwd = 2)
+abline(fit,col="red")
+points(x,est, col="blue", pch=3)
+```
+
+What is the residual variation, sigma? This indicates how good the fit is.
+```{r}
+summary(fit)$sigma
+```
+
+Sigma is also called quare root of sum of rediduals.
+
+Which is calculated in this way (same result)
+```{r}
+n<-length(x)
+sqrt( sum(resid(fit)^2) / (n-2) )
+```
+
+```
+Total Variation = Residual Variation + Regression Variation
+```
+
+Also, see appendix below for comparing different models and misleading examples.
+
+###P-Value
+
+Use summary() function for p-value.
+
+p-value is the probability to have a value equal to or greater than the observed value. 
+
+If alpha (first type error) is equal to 0.05, then:
+
+- we refuse the null hypothesis when p-value is lower than 0.05
+- we accept the null hypothesis when p-value is equal to or greater than 0.05
+
+
+```{r}
+summary(fit)
+#direct access to p-value
+#names(summary(fit))
+summary(fit)$coefficients[2,4]
+t.test(x,y)$p.value
+```
+
+R Squared Value
+```{r}
+summary(fit)$r.squared
+```
+
+###T-Tests and Confidence Interval
+
+```{r}
+tbl<-summary(fit)$coefficients
+tbl
+
+mn<-tbl[2,1]      #mean is the estimated slope
+std_err<-tbl[2,2] #standard error
+deg_fr<-fit$df    #degree of freedom
+
+#Two sides T-Tests
+mn + c(-1,1) * qt(0.975,df=deg_fr) * std_err
+```
+
+Conclusion:
+
+**With 95% confidence, we estimate that every 1000lb weight increases, MPG decreases within -6.486 and -4.203 MGP**
+
+
+###Drawing Confidence Interval Lines
+
+```{r}
+p1<-predict(fit,data.frame(x), interval="confidence")
+plot(x,y,xlab='Weight (1000lb)',ylab='MPG')
+abline(fit,col="red")
+lines(x,p1[,2],col="purple")
+lines(x,p1[,3],col="purple")
+```
+
+The actual values of upper and lowers are displayed below:
+
+```{r}
+p1<-predict(fit,data.frame(x), interval="confidence")
+#combine predictor, outcome, estimate, lower and upper
+head(cbind(x,y,p1)[order(x),])
+```
+
+What about specific value to predict? What is the mpg when the weight is 2000lb?
+```{r}
+predict(fit,data.frame(x=2), interval="confidence")
+```
+
+
+###Multivariate Linear Regression Model
+
+
+```{r,fig.height=7}
+x<-mtcars$wt
+x2<-mtcars$hp
+x3<-mtcars$disp
+y<-mtcars$mpg
+
+par(mfrow=c(2,2))
+plot(x,y)
+plot(x2,y)
+plot(x3,y)
+```
+
+Find residuals
+```{r}
+#-1 removes the intercept term
+coef(lm(y ~ x + x2 + x3 - 1))
+```
+
+Which is same as
+```{r}
+ex<-resid(lm(x ~ x2 + x3 - 1))
+ey<-resid(lm(y ~ x2 + x3 - 1))
+sum(ex * ey) / sum(ex^2)
+```
+
+###Appendix 1: Models with / without slope and intercept
+
+- **Model with Slope & Intercept** v.s. 
+- **Model with only Intercept** v.s. 
+- **Only Slope**
+
+Fit without slope (Horizontal)
+```{r}
+fit_no_slope<-lm(y ~ 1)
+```
+
+Fit without intercept = force to go throuh (0,0)
+```{r}
+fit_no_intercept<-lm(y ~ x - 1)
+```
+
+```{r}
+plot(x,y,xlim=c(0,7),ylim=c(0,40))
+abline(fit,col="red")
+abline(fit_no_slope,col="blue")
+abline(fit_no_intercept,col="green")
+```
+
+How can we measure which one is the best model? It's obvious, but let's verify it. Use Sigma. 
+
+```{r}
+c(summary(fit)$sigma, 
+  summary(fit_no_slope)$sigma, 
+  summary(fit_no_intercept)$sigma)
+```
+
+Sum Sq Values Comparison
+```{r}
+c(anova(fit)[1,'Sum Sq'],
+  anova(fit_no_slope)[1,'Sum Sq'],
+  anova(fit_no_intercept)[1,'Sum Sq'])
+
+anova(fit,fit_no_slope,fit_no_intercept)
+```
+
+
+Check R Squared Values
+```{r}
+c(summary(fit)$r.squared,
+  summary(fit_no_slope)$r.squared,
+  summary(fit_no_intercept)$r.squared)
+```
+
+
+Note: the linear model without slope shows 0 for sum of redistuals. Residual values are canceled out each other; however sigma is larger than the best fit one.
+
+###Appendix 2: Misleading Examples
+
+Below 4 different datasets show the same slope, and also sigmas and Sum Sq are same.
+
+
+```{r,fig.height=6}
+data(anscombe)
+par(mfrow=c(2,2))
+a<-anscombe
+f1<-lm(a$y1~a$x1)
+f2<-lm(a$y2~a$x2)
+f3<-lm(a$y3~a$x3)
+f4<-lm(a$y4~a$x4)
+
+plot(a$x1,a$y1)
+abline(f1,col="red")
+plot(a$x2,a$y2)
+abline(f2,col="red")
+plot(a$x3,a$y3)
+abline(f3,col="red")
+plot(a$x4,a$y4)
+abline(f4,col="red")
+```
+
+*You can also call example(anscombe)*
+
+Compare Sigmas. They are same.
+
+```{r}
+c(summary(f1)$sigma,
+summary(f2)$sigma,
+summary(f3)$sigma,
+summary(f4)$sigma)
+```
+
+
+Compare Sum Sq. They are same.
+```{r}
+c(anova(f1)[1,'Sum Sq'],
+  anova(f2)[1,'Sum Sq'],
+  anova(f3)[1,'Sum Sq'],
+  anova(f4)[1,'Sum Sq'])
+```
+
+Compare R-Squared Values. They are same.
+
+```{r}
+c(summary(f1)$r.squared,
+summary(f2)$r.squared,
+summary(f3)$r.squared,
+summary(f4)$r.squared)
+```
+
