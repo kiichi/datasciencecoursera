@@ -1,0 +1,171 @@
+---
+title: "practical machine learning - quiz2"
+output:
+  html_document:
+    theme: united
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+
+###Q1
+Which of the following commands will create training and test sets with about 50% of the observations assigned to each?
+```{r}
+library(AppliedPredictiveModeling)
+library(caret)
+data(AlzheimerDisease)
+
+adData = data.frame(diagnosis,predictors)
+testIndex = createDataPartition(diagnosis, p = 0.50,list=FALSE)
+training = adData[-testIndex,]
+testing = adData[testIndex,]
+
+c(length(diagnosis),dim(training)[1],dim(testing)[1])
+```
+
+
+
+
+###Q2
+Make a plot of the outcome (CompressiveStrength) versus the index of the samples. Color by each of the variables in the data set (you may find the cut2() function in the Hmisc package useful for turning continuous covariates into factors). What do you notice in these plots?
+```{r}
+library(AppliedPredictiveModeling)
+data(concrete)
+library(caret)
+set.seed(975)
+inTrain = createDataPartition(mixtures$CompressiveStrength, p = 3/4)[[1]]
+training = mixtures[ inTrain,]
+testing = mixtures[-inTrain,]
+
+#you can take cor() function of each variables combination
+#then delete diag elements to see which  comboo is higly correlated (e.g. > 0.8)
+# or try plot below
+
+library(Hmisc)
+cutComp<-cut2(training$CompressiveStrength,g=4)
+table(cutComp)
+training<-cbind(training,cutComp)
+plot(training$CompressiveStrength,pch=19)
+plot(training$CompressiveStrength,pch=19,col=cutComp)
+
+plot(training$CompressiveStrength,pch=19,col=cut2(training$Cement,g=4))
+plot(training$CompressiveStrength,pch=19,col=cut2(training$BlastFurnaceSlag,g=4))
+plot(training$CompressiveStrength,pch=19,col=cut2(training$FlyAsh,g=4))
+plot(training$CompressiveStrength,pch=19,col=cut2(training$Water,g=4))
+plot(training$CompressiveStrength,pch=19,col=cut2(training$Superplasticizer,g=4))
+plot(training$CompressiveStrength,pch=19,col=cut2(training$CoarseAggregate,g=4))
+plot(training$CompressiveStrength,pch=19,col=cut2(training$Age,g=4))
+
+#does flyash means anything to other?
+fit<- train(CompressiveStrength ~ FlyAsh,data=training,method="glm")
+pred <- predict(fit, testing)
+qplot(CompressiveStrength,pred,data=testing,col=Cement)
+qplot(CompressiveStrength,pred,data=testing,col=BlastFurnaceSlag)
+qplot(CompressiveStrength,pred,data=testing,col=Water)
+qplot(CompressiveStrength,pred,data=testing,col=Superplasticizer)
+qplot(CompressiveStrength,pred,data=testing,col=CoarseAggregate)
+qplot(CompressiveStrength,pred,data=testing,col=Age)
+
+#featurePlot(x=training[,names(training)],
+#            y = training$CompressiveStrength,
+#            plot="pairs")
+```
+
+###Q3
+
+Make a histogram and confirm the SuperPlasticizer variable is skewed. Normally you might use the log transform to try to make the data more symmetric. Why would that be a poor choice for this variable?
+
+```{r}
+library(AppliedPredictiveModeling)
+data(concrete)
+library(caret)
+set.seed(975)
+inTrain = createDataPartition(mixtures$CompressiveStrength, p = 3/4)[[1]]
+training = mixtures[ inTrain,]
+testing = mixtures[-inTrain,]
+hist(training$Superplasticizer)
+hist(log(training$Superplasticizer))
+hist(log(training$Superplasticizer+1))
+
+#Get list of columns except for ...
+#ex_col <- names(training) != "CompressiveStrength"
+#preObj <- preProcess(training[,ex_col],method=c("BoxCox"))
+#est<-predict(preObj,training[,ex_col])
+#hist(est$Superplasticizer)
+```
+
+
+###Q4
+
+
+Find all the predictor variables in the training set that begin with IL. Perform principal components on these variables with the preProcess() function from the caret package. Calculate the number of principal components needed to capture 80% of the variance. How many are there?
+
+```{r}
+library(caret)
+library(AppliedPredictiveModeling)
+set.seed(3433)
+data(AlzheimerDisease)
+adData = data.frame(diagnosis,predictors)
+inTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]
+training = adData[ inTrain,]
+testing = adData[-inTrain,]
+```
+
+Let's give 80% threthold, and find out how many pca components are required to satisfty this condition
+```{r}
+#list of columns starting with IL_
+#grep("^IL", names(training))
+il_col<-names(training)[substr(names(training),start=1,stop=3) == "IL_"]
+preProcess(training[,il_col],method="pca",thresh = 0.8)
+# This will output following result.
+```
+
+Looks like 7 is minimu. Take this value into the argument, pcaComp:
+```{r}
+#setting 7 for the components
+preProc <- preProcess(training[,il_col],method="pca",pcaComp=7)
+trainPC <- predict(preProc,training[,il_col])
+modelFit<-train(training$diagnosis~.,method="glm",data=trainPC)
+testPC <- predict(preProc,testing[,il_col])
+```
+
+What's the accuracy? This is the answer for Q5
+```{r}
+#PCA Based Accuracy
+confusionMatrix(testing$diagnosis,predict(modelFit,testPC))
+#plot(trainPC[,1],trainPC[,2],col=factor(training$diagnosis))
+
+#Non-PCA Based Accuracy
+#fit<- train(diagnosis~.,data=training,method="glm")
+#confusionMatrix(testing$diagnosis,predict(fit, testing))
+
+
+
+#Other way
+#prComp <- prcomp(adData[,il_col])
+#plot(prComp$x[,1],prComp$x[,2],col=factor(adData$diagnosis),xlab="PC1",ylab="PC2")
+```
+
+###Q5
+
+Create a training data set consisting of only the predictors with variable names beginning with IL and the diagnosis. Build two predictive models, one using the predictors as they are and one using PCA with principal components explaining 80% of the variance in the predictors. Use method="glm" in the train function. What is the accuracy of each method in the test set? Which is more accurate?
+
+```{r}
+
+library(caret)
+library(AppliedPredictiveModeling)
+set.seed(3433)
+data(AlzheimerDisease)
+adData = data.frame(diagnosis,predictors)
+inTrain = createDataPartition(adData$diagnosis, p = 3/4)[[1]]
+training = adData[ inTrain,]
+testing = adData[-inTrain,]
+```
+
+
+
+
+
+
+

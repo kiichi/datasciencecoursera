@@ -1,0 +1,106 @@
+---
+title: "week2_caret_plot"
+author: "Kiichi Takeuchi"
+date: "October 17, 2014"
+output: html_document
+---
+
+
+```{r}
+library(caret)
+library(ISLR)
+library(AppliedPredictiveModeling)
+data(Wage)
+part<-createDataPartition(y=Wage$wage,p=0.75,list=F)
+training<-Wage[part,]
+testing<-Wage[-part,]
+#fit<-train(wage~.,data=Wage,model="glm")
+#est<-predict(fit,newdata=testing)
+```
+
+###Plot by jobclass
+```{r}
+qplot(age,wage,col=jobclass,data=training) + geom_smooth(method='lm',formula=y~x)
+```
+
+###Cut the numeric variables into intervals = factorization
+
+```{r}
+library(Hmisc)
+cutWage<-cut2(training$wage,g=3)
+table(cutWage)
+#break down
+table(cutWage,training$jobclass)
+```
+
+
+###Plot by Intervals
+
+```{r}
+qplot(cutWage,age, data=training,fill=cutWage,geom=c("boxplot"))
+qplot(cutWage,age, data=training,fill=cutWage,geom=c("jitter"))
+qplot(cutWage,age, data=training,fill=cutWage,geom=c("boxplot","jitter"))
+```
+
+###Density Plot
+```{r}
+
+training<-cbind(training,cutWage)
+qplot(wage, data=training,col=cutWage,geom=c("density"))
+
+#Check out other column
+qplot(wage, data=training,col=education,geom=c("density"))
+```
+
+
+
+###How about fitting All?
+
+```{r}
+#modFitAll<- train(wage ~ .,data=training,method="lm")
+#pred <- predict(modFitAll, testing)
+#qplot(wage,pred,data=testing)
+```
+
+
+
+
+
+#Practice Part 2
+
+http://topepo.github.io/caret/visualizations.html
+
+###Use Iris data, and train to guess the species
+```{r}
+transparentTheme(trans = .4)
+featurePlot(x = iris[, 1:4],
+            y = iris$Species,
+            plot = "pairs",
+            ## Add a key at the top
+            auto.key = list(columns = 3))
+
+
+featurePlot(x = iris[, 1:4],
+                  y = iris$Species,
+                  plot = "density",
+                  ## Pass in options to xyplot() to 
+                  ## make it prettier
+                  scales = list(x = list(relation="free"),
+                                y = list(relation="free")),
+                  adjust = 1.5,
+                  pch = "|",
+                  layout = c(4, 1),
+                  auto.key = list(columns = 3))
+
+
+featurePlot(x = iris[, 1:4],
+                  y = iris$Species,
+                  plot = "box",
+                  ## Pass in options to bwplot() 
+                  scales = list(y = list(relation="free"),
+                                x = list(rot = 90)),
+                  layout = c(4,1 ),
+                  auto.key = list(columns = 2))
+```
+
+

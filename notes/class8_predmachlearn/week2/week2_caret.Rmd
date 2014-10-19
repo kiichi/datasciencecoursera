@@ -1,0 +1,71 @@
+---
+title: "week2"
+author: "Kiichi Takeuchi"
+date: "October 17, 2014"
+output: html_document
+---
+
+###Creating Training Data and Testing Data
+
+```{r}
+#use caret and iris data
+library(caret)
+library(datasets)
+part<-createDataPartition(y=iris$Species,p=0.75,list=F)
+training<-iris[part,]
+testing<-iris[-part,]
+
+#splitted like below
+c(dim(iris)[1],dim(training)[1],dim(testing)[1])
+colnames(iris)
+```
+
+
+
+###Trainining
+
+Note: Install package randomForest to use train
+Note2: this takes long time to run.
+
+```{r}
+fit<-train(Species~.,data=training,model="glm")
+fit
+fit$finalModel
+```
+
+In addition, there are other options for the training model: boot, boot632, cv, repeatedcv etc...
+
+###Predition on Testing Set
+
+```{r}
+est<-predict(fit,newdata=testing)
+head(est,10)
+```
+
+
+###Measure the Accuracy
+
+```{r}
+confusionMatrix(est,testing$Species)
+```
+
+
+
+###Appendix - Example with car data
+```{r}
+library(caret)
+library(datasets)
+mtcars$am2<-factor(mtcars$am)
+part<-createDataPartition(y=mtcars$am2,p=0.75,list=F)
+training<-mtcars[part,]
+testing<-mtcars[-part,]
+fit<-train(am2~.,data=training,model="glm")
+est<-predict(fit,newdata=testing)
+confusionMatrix(est,testing$am2)
+```
+
+
+
+
+
+

@@ -1,0 +1,50 @@
+---
+title: "week2_preproc"
+author: "Kiichi Takeuchi"
+date: "October 17, 2014"
+output: html_document
+---
+
+```{r}
+#use caret and iris data
+library(caret)
+library(datasets)
+colnames(swiss)
+part<-createDataPartition(y=swiss$Fertility,p=0.75,list=F)
+training<-swiss[part,]
+testing<-swiss[-part,]
+```
+
+###Training with preprocessing
+```{r}
+fit<-train(Fertility~.,data=training,preProcess=c("center","scale"),model="glm")
+```
+
+###Preoprocess separately - center and scale
+
+```{r}
+#"Except For Education"
+ex_ed<-names(training) != "Education"
+obj<-preProcess(training[,-ex_ed],method=c("center","scale"))
+predict(obj,training[,-ex_ed])
+```
+
+###Preoprocess separately - Imputing
+```{r}
+brokenIndex<- rbinom(dim(training)[1],size=1,prob=0.5)==1
+training$FertilityBroken<-training$Fertility
+training[brokenIndex,c("FertilityBroken")]<-NA
+
+#Except For Broken Columns
+ex_brk<-names(training) != "FertilityBroken"
+
+fixed<-preProcess(training[,ex_brk],method="knnImpute")
+
+head(training$FertilityBroken)
+head(predict(fixed,training[,ex_brk])$Fertility)
+```
+
+
+
+
+
