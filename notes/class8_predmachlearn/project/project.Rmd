@@ -1,0 +1,150 @@
+---
+title: "Practical Machine Learning Project"
+output:
+  html_document:
+    theme: united
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+
+###Overview
+
+In this report, Human Activity Recognition (HAR) motion dataset that is related five different exercises is imported into R program, and a prediction model will be build based on the subsetted training data. The HAR data contains following key variables with components:
+
+- Accelration: x, y and z
+- Gyro: x, y and z
+- Magnet: x, y and z
+- Tilt: yaw, pitch and roll
+
+Additionally, there are other columns timestamp, person's name, variability are found in different columns.
+
+Our goal is to estimate the correct outcome (classe) from those predictors. Analysis processes are presented below.
+
+###Setup
+
+Before starting the analysis, some additional libraries are included. The main library is caret, and some graphing moudules are included to explore the dataset. I would like to note that parallel processing library allows us to register 4 cores of the CPU. This optional configuration that could be different per training environment, and it is mainly used in train() function in order to speed up the step. 
+
+```{r}
+library(caret)
+library(AppliedPredictiveModeling)
+library(rattle)
+library(ggplot2)
+library(gridExtra)
+library(doParallel)
+registerDoParallel(core=4)
+```
+
+Two files will be downloaded and they will be loaded into memory. 
+
+```{r}
+if (!file.exists("pml-training.csv")){
+  download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", destfile = "pml-training.csv", method="curl")  
+}
+if (!file.exists("pml-testing.csv")){
+  download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", destfile = "pml-testing.csv", method="curl")  
+}
+training_src<-read.csv("pml-training.csv")
+testing_final<-read.csv("pml-testing.csv")
+```
+
+###Exploratory Data Analysis
+
+To begin exploration with this dataset, I would like to extract sample subset by the person, Pedro, as an example. The first figure simply render different colors per exercise for gyro_arm_y component based on the timeline. The rest of three figures are few sample combinations of variables: x v.s. y of accelerometer values (top-right), magnet v.s. gyros of the same x component (bottom-left), and pitch v.s. roll of the arm (bottom-right). 
+
+```{r}
+tmp<-training_src[training_src$user_name=='pedro',]
+g1<-qplot(raw_timestamp_part_1, gyros_arm_y,col=classe,alpha=0.7,data=tmp)
+g2<-qplot(accel_arm_x,accel_arm_y,col=classe,alpha=0.7,data=tmp)
+g3<-qplot(gyros_arm_x,magnet_arm_x,col=classe,alpha=0.7,data=tmp)
+g4<-qplot(roll_arm,pitch_arm,col=classe,alpha=0.7,data=tmp)    
+grid.arrange(g1,g2,g3,g4, ncol=2,nrow=2)
+```
+
+By looking over those graphs, each cluster of exercises is not clearly separated; however, some segments could be visually identified in different area. For example, the bottom-right figure, pitch v.s. roll, presents the exercise type A (red) spreads all over the area while the exercise type D (blue) values gather from the center to positive areas in terms of the roll axis.
+
+You might notice some outliers in the accelerometer value of the exercise type A.
+
+###Partitioning
+
+With caret's createDataPartition function, the training and testing sets are splited into 70% and 30% ratio. Note that the classe variable was targetd for this partitioning process.
+
+```{r}
+inTrain = createDataPartition(training_src$classe, p = 0.7, list=F)
+training = training_src[inTrain,]
+testing = training_src[-inTrain,]
+```
+
+Key variables are selected with grep function. As result of variable selection process, only 52 predictors are extracted out of 160 variables. By adding the outcome, the total number of columns is 53.
+
+```{r}
+cols<-grep("^pitch|^yaw|^roll|^gyros|^accel|^magnet|^total|^classe",names(training))
+length(cols)
+```
+
+###Training
+
+In this training section, I would like to start with "rpart" which uses relatively simple classification tree building algorithm, and then the "rf" method with PCA will be applied in the next approach.
+
+Since the nature of he dataset shows overwrapped values over different exercise type, I expect this might generate lower accuracy than later approach. 
+
+In both steps, the default bootstrap option are used for the train control.
+
+###Approach 1: rpart
+
+Train the model with only selected variables. See the final model and tree diaglram for more details.
+```{r}
+fit <- train(classe ~.,method="rpart",data=training[,cols])
+fit$finalModel
+```
+
+Here is the visualized tree structure.
+```{r}
+fancyRpartPlot(fit$finalModel)
+```
+
+Using the partitioned testing set, the accuracy is displayed below.
+```{r}
+est<-predict(fit,testing)
+confusionMatrix(testing$classe,est) 
+```
+
+The accuracy is 49.6 % with with Kappa is 0.34. The confusion matrix shows poor agreement to categorize all outcomes. Especially, D and E are dragging the entire accuracy. In this model, D is not identifiable at all.
+
+###Approach 2: rf with pca
+
+Next, the Random Forest (rf) option will be selected as the method. PCA is applied for preprocessing the data. Note that the pca option will also do scaling and centering. See the final model below.
+
+```{r}
+fit<-train(classe~.,method="rf",data=training[,cols],preProcess=c("pca"))
+fit$finalModel
+```
+
+The final model includes 500 classification trees, and the estimates of error rate is about 14.21%.
+
+Using the partitioned testing set, the accuracy is displayed below.
+```{r}
+est<-predict(fit,testing)
+confusionMatrix(testing$classe,est) 
+```
+
+The confusion matrix for the testing set shows imporved accuracy, 97.8%, and the Kappa also increased to 0.972. The out of samples also shows resonable results in the table; There are some missing outcomes, however, it is not skewed result that was observed in above approach.
+
+
+###Final Assessment
+
+Using given testing dataset that contains 20 rows, the model has been applied on them. The final classification results are shown below.
+
+```{r}
+est<-predict(fit,testing_final[,cols])
+est
+```
+
+###Summary
+
+In conclusion, applying random method with PCA preprocessing option on the 70% partitioned training dataset achieved more than 97.8% of accuracy as the end. Assessment on the final testing set demonstrates 100% matching; none of outcome are appearing as out of samples.
+
+###Reference
+
+Human Activity Recognition Project (http://groupware.les.inf.puc-rio.br/har)

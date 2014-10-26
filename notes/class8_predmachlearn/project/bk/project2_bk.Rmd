@@ -1,0 +1,30 @@
+```{r}
+set.seed(12345)
+library(caret)
+library(AppliedPredictiveModeling)
+library(rattle)
+library(doParallel)
+registerDoParallel(core=4)
+if (!file.exists("pml-training.csv")){
+  download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", destfile = "pml-training.csv", method="curl")  
+}
+if (!file.exists("pml-testing.csv")){
+  download.file("https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", destfile = "pml-testing.csv", method="curl")  
+}
+training_src<-read.csv("pml-training.csv")
+testing_final<-read.csv("pml-testing.csv")
+inTrain = createDataPartition(training_src$classe, p = 0.7, list=F)
+training = training_src[inTrain,]
+testing = training_src[-inTrain,]
+cols<-grep("^pitch|^yaw|^roll|^gyros|^accel|^magnet|^total|^classe",names(training))
+cols
+fit<-train(classe~.,
+           method="rf",           
+           #trControl = trainControl(method="cv"),
+           preProcess = c("pca"),           
+           data=training[,cols])
+est<-predict(fit,testing)
+confusionMatrix(testing$classe,est) 
+est<-predict(fit,testing_final[,cols])
+est
+```

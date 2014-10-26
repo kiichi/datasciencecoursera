@@ -1,0 +1,57 @@
+---
+title: "tree"
+output:
+  html_document:
+    theme: united
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r}
+library(caret)
+library(rattle) #install package rpart.plot too
+data(iris)
+names(iris)
+inTrain = createDataPartition(iris$Species, p = 0.7, list=F)
+training = iris[inTrain,]
+testing = iris[-inTrain,]
+qplot(Petal.Width,Sepal.Width,col=Species,data=training)
+```
+
+###Build Tree using rpart method
+
+```{r}
+fit<-train(Species~.,method="rpart",data=training)
+fit$finalModel
+fancyRpartPlot(fit$finalModel)
+```
+
+Predicted results on the test set
+```{r}
+est<-predict(fit,testing)
+est
+```
+
+###rpart method Cross Validation
+
+Show accuracy and confusion matrix. Looks like we missed 1 for virginica.
+```{r}
+confusionMatrix(testing$Species,est) #or use table()
+```
+
+###Build Tree using rf method
+
+```{r}
+fit<-train(Species~.,method="rf",data=training)
+fit$finalModel
+head(getTree(fit$finalModel,k=2))
+```
+
+###rf method Cross Validation
+
+```{r}
+est<-predict(fit,testing)
+est
+confusionMatrix(est,testing$Species)
+```
