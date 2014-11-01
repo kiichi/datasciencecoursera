@@ -8,6 +8,16 @@ output:
     toc: yes
 ---
 
+Good Example: See usage of
+
+- findCorrelation: how to find which variables are correlated each other?
+- varImp: how can we tell which variables are contributing most?
+
+http://htmlpreview.github.io/?https://github.com/pmbgha/PMLRepo/blob/master/PML_Report.html
+
+Good explanation about the # of predictor v.s. the accuracy
+
+http://brandenkmurray.github.io/coursera-pml/activityproject.html
 
 ###Overview
 

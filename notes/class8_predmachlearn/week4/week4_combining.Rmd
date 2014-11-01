@@ -1,0 +1,70 @@
+---
+title: "week4"
+author: "Kiichi Takeuchi"
+date: "November 1, 2014"
+output: html_document
+---
+```{r}
+library(ISLR)
+data(Wage)
+library(caret)
+library(doParallel)
+registerDoParallel(core=4)
+
+#Remove logwage column
+Wage<-subset(Wage,select=-(logwage))
+head(Wage)
+# Create a building data set and validation set
+inBuild <- createDataPartition(y=Wage$wage, p=0.7, list=FALSE)
+validation <- Wage[-inBuild,]; 
+buildData <- Wage[inBuild,]
+inTrain <- createDataPartition(y=buildData$wage,p=0.1, list=FALSE)
+training <- buildData[inTrain,]
+testing <- buildData[-inTrain,]
+qplot(age,wage,data=training)
+c(dim(training)[1],dim(testing)[1],dim(validation)[1])
+```
+
+
+Build two models
+```{r}
+mod1 <- train(wage ~.,method="glm",data=training)
+mod2 <- train(wage ~.,method="rf",data=training, trControl = trainControl(method="cv"),number=3)
+```
+
+Compare two predictions: If they drwa straight line, both are matching good.
+```{r}
+pred1 <- predict(mod1,testing)
+pred2 <- predict(mod2,testing)
+qplot(pred1,pred2,col=wage,data=testing)
+```
+
+predict for tesing set
+```{r}
+predDF <- data.frame(pred1,pred2,wage=testing$wage)
+combModFit <- train(wage ~.,method="gam",data=predDF)
+combPred <- predict(combModFit,predDF)
+```
+
+error rate of testing?
+```{r}
+sqrt(sum((combPred-testing$wage)^2))
+```
+
+final validation
+```{r}
+pred1V <- predict(mod1,validation); pred2V <- predict(mod2,validation)
+predVDF <- data.frame(pred1=pred1V,pred2=pred2V)
+combPredV <- predict(combModFit,predVDF)
+```
+
+error rate of validation?
+```{r}
+sqrt(sum((combPredV-validation$wage)^2))
+```
+
+
+
+
+
+

@@ -1,0 +1,52 @@
+---
+title: "week3_trend_timeline"
+author: "Kiichi Takeuchi"
+date: "November 1, 2014"
+output: html_document
+---
+
+```{r}
+library(forecast)
+```
+
+Load google's stock market data
+```{r}
+library(quantmod)
+from.dat <- as.Date("01/01/08", format="%m/%d/%y")
+to.dat <- as.Date("12/31/13", format="%m/%d/%y")
+getSymbols("GOOG", src="google", from = from.dat, to = to.dat)
+head(GOOG)
+GOOG<-GOOG[,1:4]
+```
+
+```{r}
+mGoog <- to.monthly(GOOG)
+googOpen <- Op(mGoog)
+ts1 <- ts(googOpen,frequency=12)
+plot(ts1,xlab="Years+1", ylab="GOOG")
+```
+
+Use decompose to break up into different cyclic patterns
+```{r}
+plot(decompose(ts1),xlab="Years+1")
+```
+
+Creating training set with window function
+
+```{r}
+ts1Train <- window(ts1,start=1,end=5)
+ts1Test <- window(ts1,start=5,end=(7-0.01))
+head(ts1Train)
+plot(ts1Train)
+lines(ma(ts1Train,order=3),col="red")
+```
+
+forecasting with error margin
+
+```{r}
+ets1 <- ets(ts1Train,model="MMM")
+fcast <- forecast(ets1)
+accuracy(fcast,ts1Test)
+plot(fcast)
+lines(ts1Test,col="red")
+```
