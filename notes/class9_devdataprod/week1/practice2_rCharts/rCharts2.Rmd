@@ -1,0 +1,16 @@
+---
+title: "rCharts1"
+author: "Kiichi Takeuchi"
+date: "November 8, 2014"
+output: html_document
+---
+
+https://github.com/ramnathv/rCharts/blob/master/inst/apps/notebook/www/example.Rmd
+
+
+```{r,results='asis',tidy=FALSE,message=FALSE}
+library(rCharts)
+names(iris) = gsub("\\.", "", names(iris))
+p1<-rPlot(SepalLength ~ SepalWidth | Species, data = iris, color = 'Species', type = 'point')
+p1$print()
+```

@@ -1,0 +1,7 @@
+---
+title: "week1"
+author: "Kiichi Takeuchi"
+date: "November 7, 2014"
+output: html_document
+---
+

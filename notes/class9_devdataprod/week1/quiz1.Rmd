@@ -1,0 +1,45 @@
+---
+title: "quiz1"
+author: "Kiichi Takeuchi"
+date: "November 7, 2014"
+output: html_document
+---
+
+###Q1
+
+```{r}
+library(manipulate)
+myPlot <- function(s) {
+    plot(cars$dist - mean(cars$dist), cars$speed - mean(cars$speed))
+    abline(0, s)
+}
+manipulate(myPlot(s), s = slider(0, 2, step = 0.1))
+```
+
+###Q2
+
+```{r}
+library(rCharts)
+dTable(airquality, sPaginationType = "full_numbers")
+```
+
+###Q3
+```{r}
+ui.R
+```
+
+###Q4
+```{r}
+library(shiny)
+shinyUI(pageWithSidebar(
+  headerPanel("Data science FTW!"),
+  sidebarPanel(
+    h2('Big text'), #missing comma here!
+    h3('Sidebar')
+  ),
+  mainPanel(
+      h3('Main Panel text')
+  )
+))
+```
+```
